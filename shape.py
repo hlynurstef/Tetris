@@ -23,9 +23,9 @@ class Shape():
         self.set_starting_position(shape[0])
         self.shape = self.build_shape(shape[0], shape[1])
         self.time_of_last_fall = pygame.time.get_ticks()
-        self.fall_frequency = 1000
+        self.fall_frequency = 750
         self.time_of_last_sidestep = pygame.time.get_ticks()
-        self.side_frequency = 250
+        self.side_frequency = 150
 
 
     def get_random_shape(self):
@@ -89,20 +89,23 @@ class Shape():
                     block.rect.y += 40
             self.time_of_last_fall = current_time
 
-        if self.moving_left and board.can_move_to('LEFT', self.shape):
+        if self.moving_left and board.can_move_to_left(self.shape):
             self.move_piece_sideways('LEFT', current_time)
-        if self.moving_right and board.can_move_to('RIGHT', self.shape):
+        if self.moving_right and board.can_move_to_right(self.shape):
             self.move_piece_sideways('RIGHT', current_time)
 
 
     def move_piece_sideways(self, direction, current_time):
-        """Moves shape either to the left or right"""
+        """
+        Moves shape either to the left or right.
+        direction='LEFT' or direction='RIGHT'.
+        """
         if current_time - self.time_of_last_sidestep > self.side_frequency:
             for row in self.shape:
                 for block in row:
-                    if direction == "LEFT":
+                    if direction == 'LEFT':
                         block.rect.x -= 40
-                    else:
+                    elif direction == 'RIGHT':
                         block.rect.x += 40
             self.time_of_last_sidestep = current_time
 
