@@ -25,14 +25,17 @@ class Shape():
 
 
     def rotate(self, clockwise=True):
-        """Rotates shape clockwise. If counter=False then rotate counter clockwise."""
+        """
+        Rotates shape clockwise if it's possible to rotate.
+        If counter=False then rotate counter clockwise.
+        """
         if self.unable_to_rotate():
             return
         if clockwise:
-            return [[shape[y][x] for y in reversed(range(len(shape)))]
+            self.shape = [[shape[y][x] for y in reversed(range(len(shape)))]
                                  for x in range(len(shape[0]))]
         else:
-            return [[shape[y][x] for y in range(len(shape))]
+            self.shape = [[shape[y][x] for y in range(len(shape))]
 					             for x in reversed(range(len(shape[0])))]
 
 
