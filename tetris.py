@@ -43,7 +43,7 @@ class Tetris():
             #    self.title_screen = func.update_title_screen(self.screen, self.settings)
             #else:
                 #func.update_screen(self.screen, self.settings)
-            func.update_screen(self.screen, self.settings, self.current_shape)
+            func.update_screen(self.screen, self.settings, self.current_shape, self.board)
 
 if __name__ == '__main__':
     Tetris().run_game()
