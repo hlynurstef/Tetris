@@ -3,15 +3,7 @@ from block import Block
 
 def update_screen(screen, settings):
     """Update everything on screen and then draw the screen."""
-    screen.fill(settings.black)
-
-    # TODO: need to take a look a the positioning of these
-    board_background = pygame.Rect(35, 0, 490, 720)
-    pygame.draw.rect(screen, settings.white, board_background)
-    screen.blit(settings.wall, (40,0))
-    screen.blit(settings.wall, (480,0))
-    screen.blit(settings.scoreboard, (525, 0))
-
+    draw_board(screen, settings)
     pygame.display.update()
 
 
@@ -22,6 +14,16 @@ def update_title_screen(screen, settings):
     pygame.display.update()
 
     return display_title_screen
+
+
+def draw_board(screen, settings):
+    """Draw everything on the board."""
+    screen.fill(settings.black)
+    board_background = pygame.Rect(35, 0, 490, 720)
+    pygame.draw.rect(screen, settings.white, board_background)
+    screen.blit(settings.wall, (40,0))
+    screen.blit(settings.wall, (480,0))
+    screen.blit(settings.scoreboard, (525, 0))
 
 
 def check_events():
@@ -41,6 +43,7 @@ def check_events_title_screen():
             if event.key == pygame.K_RETURN:
                 return False
     return True
+
 
 def quit_game():
     """Quits pygame and python."""
