@@ -34,3 +34,11 @@ class Settings():
 
         # Size of each block in grid
         self.scale = 20
+
+        # Screen dimensions
+        # Single block: 40x40 pixels
+        # Screen width: 20 Blocks
+        # Screen height: 18 Blocks
+        # Board size: 10 Blocks x 18 Blocks
+        # Left side: 2 Blocks
+        # Right side: 7 Blocs
