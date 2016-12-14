@@ -1,5 +1,6 @@
 import pygame
 import ctypes
+import platform
 from game_settings import Settings
 from block import Block
 import game_functions as func
@@ -10,6 +11,10 @@ class Tetris():
     def __init__(self):
         """Initialize game."""
         pygame.init()
+
+        if platform.system() == 'Windows':
+            # Ensure correct screen size to be displayed.
+            ctypes.windll.user32.SetProcessDPIAware()
 
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width,
