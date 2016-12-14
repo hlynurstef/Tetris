@@ -15,11 +15,20 @@ def check_events():
         if event.type == pygame.QUIT:
             quit_game()
 
-def rotate_clockwise(shape):
+def rotate_counter_clockwise(shape):
 	outer = []
 	for x in reversed(range(len(shape[0]))):
 		inner = []
 		for y in range(len(shape)):
+			inner.append(shape[y][x])
+		outer.append(inner)
+	return outer
+
+def rotate_clockwise(shape):
+	outer = []
+	for x in range(len(shape[0])):
+		inner = []
+		for y in reversed(range(len(shape))):
 			inner.append(shape[y][x])
 		outer.append(inner)
 	return outer
