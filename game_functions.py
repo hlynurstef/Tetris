@@ -1,9 +1,10 @@
 import pygame
 from block import Block
 
-def update_screen(screen, settings, current_shape):
+def update_screen(screen, settings, current_shape, speed):
     """Update everything on screen and then draw the screen."""
     draw_board(screen, settings)
+    current_shape.update(speed)
     current_shape.blitme()
     pygame.display.update()
 

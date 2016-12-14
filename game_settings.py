@@ -30,7 +30,7 @@ class Settings():
         self.screen_height = 720
         self.caption = "Tetris"
 
-        self.fps = 15
+        self.fps = 60
 
         # Size of each block in grid
         self.scale = 40

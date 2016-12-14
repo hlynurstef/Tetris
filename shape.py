@@ -71,6 +71,13 @@ class Shape():
         # TODO: check if shape is able to rotate.
 
 
+    def update(self, speed):
+        """Update the position of the shape."""
+        for row in self.shape:
+            for block in row:
+                block.rect.y += int(200 * speed)
+
+
     def blitme(self):
         """Blit the Shape to the screen."""
         for row in self.shape:
