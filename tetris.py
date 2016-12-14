@@ -15,14 +15,17 @@ class Tetris():
         self.screen = pygame.display.set_mode((self.settings.screen_width,
                                                self.settings.screen_height))
         pygame.display.set_caption('Tetris Reborn')
-        
+        self.title_screen = True
+
 
     def run_game(self):
         """Main function for Tetris."""
-
         while True:
             func.check_events()
-            func.update_screen(self.screen, self.settings)
+            if self.title_screen:
+                self.title_screen = func.update_title_screen(self.screen, self.settings)
+            else:
+                func.update_screen(self.screen, self.settings)
 
 
 if __name__ == '__main__':
