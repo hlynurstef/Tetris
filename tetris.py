@@ -25,7 +25,7 @@ class Tetris():
         self.title_screen = True
 
         self.current_shape = Shape(self.screen)
-        self.board = Board()
+        self.board = Board(self.screen)
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
