@@ -4,6 +4,7 @@ import platform
 from game_settings import Settings
 from block import Block
 from shape import Shape
+from board import Board
 import game_functions as func
 
 class Tetris():
@@ -24,6 +25,7 @@ class Tetris():
         self.title_screen = True
 
         self.current_shape = Shape(self.screen)
+        self.board = Board()
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
