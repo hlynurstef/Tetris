@@ -46,3 +46,4 @@ class Settings():
         # Images
         self.wall = pygame.image.load('images/wall_full.png')
         self.title_screen = pygame.image.load('images/title_screen.png')
+        self.scoreboard = pygame.image.load('images/scoreboard.png')

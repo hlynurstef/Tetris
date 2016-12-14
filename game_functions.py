@@ -10,6 +10,7 @@ def update_screen(screen, settings):
     pygame.draw.rect(screen, settings.white, board_background)
     screen.blit(settings.wall, (40,0))
     screen.blit(settings.wall, (480,0))
+    screen.blit(settings.scoreboard, (525, 0))
 
     pygame.display.update()
 
