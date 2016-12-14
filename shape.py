@@ -24,6 +24,8 @@ class Shape():
         self.shape = self.build_shape(shape[0], shape[1])
         self.time_of_last_fall = pygame.time.get_ticks()
         self.fall_frequency = 1000
+        self.time_of_last_sidestep = pygame.time.get_ticks()
+        self.side_frequency = 250
 
 
     def get_random_shape(self):
@@ -85,7 +87,28 @@ class Shape():
                     block.rect.y += 40
             self.time_of_last_fall = current_time
 
+        if self.moving_left:
+            self.move_piece_left(current_time)
+        if self.moving_right:
+            self.move_piece_right(current_time)
 
+
+    def move_piece_left(self, current_time):
+        if current_time - self.time_of_last_sidestep > self.side_frequency:
+            for row in self.shape:
+                for block in row:
+                    block.rect.x -= 40
+            self.time_of_last_sidestep = current_time
+
+
+    def move_piece_right(self, current_time):
+        if current_time - self.time_of_last_sidestep > self.side_frequency:
+            for row in self.shape:
+                for block in row:
+                    block.rect.x += 40
+            self.time_of_last_sidestep = current_time
+
+    
     def blitme(self):
         """Blit the Shape to the screen."""
         for row in self.shape:

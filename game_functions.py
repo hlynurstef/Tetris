@@ -27,11 +27,29 @@ def draw_board(screen, settings):
     screen.blit(settings.scoreboard, (525, 0))
 
 
-def check_events():
+def check_events(shape):
     """Check for events and respond to them."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit_game()
+        elif event.type == pygame.KEYDOWN:
+            check_keydown_events(event, shape)
+        elif event.type == pygame.KEYUP:
+            check_keyup_events(event, shape)
+
+
+def check_keydown_events(event, shape):
+    if event.key == pygame.K_LEFT:
+        shape.moving_left = True
+    if event.key == pygame.K_RIGHT:
+        shape.moving_right = True
+
+
+def check_keyup_events(event, shape):
+    if event.key == pygame.K_LEFT:
+        shape.moving_left = False
+    if event.key == pygame.K_RIGHT:
+        shape.moving_right = False
 
 
 def check_events_title_screen():
