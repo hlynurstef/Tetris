@@ -15,7 +15,7 @@ class Tetris():
         self.screen = pygame.display.set_mode((self.settings.screen_width,
                                                self.settings.screen_height))
         pygame.display.set_caption('Tetris Reborn')
-
+        
 
     def run_game(self):
         """Main function for Tetris."""

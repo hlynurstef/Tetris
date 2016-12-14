@@ -42,3 +42,6 @@ class Settings():
         # Board size: 10 Blocks x 18 Blocks
         # Left side: 2 Blocks
         # Right side: 7 Blocs
+
+        # Images
+        self.wall = pygame.image.load('images/wall_full.png')
