@@ -24,6 +24,8 @@ class Shape():
         self.shape = self.build_shape(shape[0], shape[1])
         self.time_of_last_fall = pygame.time.get_ticks()
         self.fall_frequency = 1000
+        self.time_of_last_sidestep = pygame.time.get_ticks()
+        self.side_frequency = 250
 
 
     def get_random_shape(self):
@@ -76,14 +78,33 @@ class Shape():
         # TODO: check if shape is able to rotate.
 
 
-    def update(self):
+    def update(self, board):
         """Update the position of the shape."""
         current_time = pygame.time.get_ticks()
         if current_time - self.time_of_last_fall > self.fall_frequency:
+            if board.has_landed(self.shape):
+                return True
             for row in self.shape:
                 for block in row:
                     block.rect.y += 40
             self.time_of_last_fall = current_time
+
+        if self.moving_left and board.can_move_to('LEFT', self.shape):
+            self.move_piece_sideways('LEFT', current_time)
+        if self.moving_right and board.can_move_to('RIGHT', self.shape):
+            self.move_piece_sideways('RIGHT', current_time)
+
+
+    def move_piece_sideways(self, direction, current_time):
+        """Moves shape either to the left or right"""
+        if current_time - self.time_of_last_sidestep > self.side_frequency:
+            for row in self.shape:
+                for block in row:
+                    if direction == "LEFT":
+                        block.rect.x -= 40
+                    else:
+                        block.rect.x += 40
+            self.time_of_last_sidestep = current_time
 
 
     def blitme(self):

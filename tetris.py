@@ -37,13 +37,13 @@ class Tetris():
             # Delta time calculation.
             self.clock.tick(self.settings.fps)
 
-            func.check_events()
+            func.check_events(self.current_shape)
             # TODO: Uncomment these lines to show title screen.
             #if self.title_screen:
             #    self.title_screen = func.update_title_screen(self.screen, self.settings)
             #else:
                 #func.update_screen(self.screen, self.settings)
-            func.update_screen(self.screen, self.settings, self.current_shape)
+            func.update_screen(self.screen, self.settings, self.current_shape, self.board)
 
 if __name__ == '__main__':
     Tetris().run_game()
