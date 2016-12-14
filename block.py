@@ -10,7 +10,7 @@ class Block(Sprite):
         self.screen = screen
         self.settings = settings
 
-        self.image = pygame.Surface((20, 20))
+        self.image = pygame.Surface((40, 40))
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.x = x

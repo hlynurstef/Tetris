@@ -33,7 +33,7 @@ class Settings():
         self.fps = 15
 
         # Size of each block in grid
-        self.scale = 20
+        self.scale = 40
 
         # Screen dimensions
         # Single block: 40x40 pixels
