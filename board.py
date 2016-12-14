@@ -17,7 +17,7 @@ class Board():
     def clear_board(self):
         """Returns an empty board."""
         board = []
-        for row in range(self.settings.board_heigt):
+        for row in range(self.settings.board_height):
             row = []
             for col in range(self.settings.board_width):
                 row.append(None)
