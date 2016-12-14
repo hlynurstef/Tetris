@@ -40,6 +40,8 @@ class Settings():
         # Screen width: 20 Blocks
         # Screen height: 18 Blocks
         # Board size: 10 Blocks x 18 Blocks
+        self.board_width = 10
+        self.board_height = 18
         # Left side: 2 Blocks
         # Right side: 7 Blocs
 
