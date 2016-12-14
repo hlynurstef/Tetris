@@ -1,14 +1,15 @@
 import pygame
 from pygame.sprite import Sprite
+from game_settings import Settings
 
 class Block(Sprite):
     """A class representing a single block."""
 
-    def __init__(self, screen, settings, color, x, y):
+    def __init__(self, screen, color, x, y):
         """Initialize the Block."""
         super(Block, self).__init__()
         self.screen = screen
-        self.settings = settings
+        self.settings = Settings()
 
         self.image = pygame.Surface((40, 40))
         self.image.fill(color)
