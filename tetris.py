@@ -27,11 +27,12 @@ class Tetris():
         """Main function for Tetris."""
         while True:
             func.check_events()
-            if self.title_screen:
-                self.title_screen = func.update_title_screen(self.screen, self.settings)
-            else:
-                func.update_screen(self.screen, self.settings)
-
+            # TODO: Uncomment these lines to show title screen.
+            #if self.title_screen:
+            #    self.title_screen = func.update_title_screen(self.screen, self.settings)
+            #else:
+                #func.update_screen(self.screen, self.settings)
+            func.update_screen(self.screen, self.settings)
 
 if __name__ == '__main__':
     Tetris().run_game()
