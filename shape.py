@@ -2,6 +2,7 @@ from game_settings import Settings
 from utilities import Utilities
 from random import randrange
 from block import Block
+import pygame
 
 
 class Shape():
@@ -12,6 +13,8 @@ class Shape():
         self.screen = screen
         self.settings = Settings()
         self.initialize_shape()
+        self.moving_right = False
+        self.moving_left = False
 
 
     def initialize_shape(self):
@@ -19,6 +22,8 @@ class Shape():
         shape = self.get_random_shape()
         self.set_starting_position(shape[0])
         self.shape = self.build_shape(shape[0], shape[1])
+        self.time_of_last_fall = pygame.time.get_ticks()
+        self.fall_frequency = 1000
 
 
     def get_random_shape(self):
@@ -71,11 +76,14 @@ class Shape():
         # TODO: check if shape is able to rotate.
 
 
-    def update(self, speed):
+    def update(self):
         """Update the position of the shape."""
-        for row in self.shape:
-            for block in row:
-                block.rect.y += int(200 * speed)
+        current_time = pygame.time.get_ticks()
+        if current_time - self.time_of_last_fall > self.fall_frequency:
+            for row in self.shape:
+                for block in row:
+                    block.rect.y += 40
+            self.time_of_last_fall = current_time
 
 
     def blitme(self):

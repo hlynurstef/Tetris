@@ -20,7 +20,7 @@ class Tetris():
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width,
                                                self.settings.screen_height))
-        pygame.display.set_caption('Tetris Reborn')
+        pygame.display.set_caption(self.settings.caption)
         self.title_screen = True
 
         self.current_shape = Shape(self.screen)
@@ -33,8 +33,7 @@ class Tetris():
         """Main function for Tetris."""
         while True:
             # Delta time calculation.
-            milliseconds = self.clock.tick(self.settings.fps)
-            speed = milliseconds / 1000.0
+            self.clock.tick(self.settings.fps)
 
             func.check_events()
             # TODO: Uncomment these lines to show title screen.
@@ -42,7 +41,7 @@ class Tetris():
             #    self.title_screen = func.update_title_screen(self.screen, self.settings)
             #else:
                 #func.update_screen(self.screen, self.settings)
-            func.update_screen(self.screen, self.settings, self.current_shape, speed)
+            func.update_screen(self.screen, self.settings, self.current_shape)
 
 if __name__ == '__main__':
     Tetris().run_game()
