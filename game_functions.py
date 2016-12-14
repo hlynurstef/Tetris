@@ -1,9 +1,10 @@
 import pygame
 from block import Block
 
-def update_screen(screen, settings):
+def update_screen(screen, settings, current_shape):
     """Update everything on screen and then draw the screen."""
     draw_board(screen, settings)
+    current_shape.blitme()
     pygame.display.update()
 
 
@@ -12,7 +13,6 @@ def update_title_screen(screen, settings):
     screen.blit(settings.title_screen, (0,0))
     display_title_screen = check_events_title_screen()
     pygame.display.update()
-
     return display_title_screen
 
 

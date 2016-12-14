@@ -3,6 +3,7 @@ import ctypes
 import platform
 from game_settings import Settings
 from block import Block
+from shape import Shape
 import game_functions as func
 
 class Tetris():
@@ -22,6 +23,8 @@ class Tetris():
         pygame.display.set_caption('Tetris Reborn')
         self.title_screen = True
 
+        self.current_shape = Shape(self.screen)
+
 
     def run_game(self):
         """Main function for Tetris."""
@@ -32,7 +35,7 @@ class Tetris():
             #    self.title_screen = func.update_title_screen(self.screen, self.settings)
             #else:
                 #func.update_screen(self.screen, self.settings)
-            func.update_screen(self.screen, self.settings)
+            func.update_screen(self.screen, self.settings, self.current_shape)
 
 if __name__ == '__main__':
     Tetris().run_game()
