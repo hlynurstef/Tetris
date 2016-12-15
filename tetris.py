@@ -37,7 +37,7 @@ class Tetris():
             # Delta time calculation.
             self.clock.tick(self.settings.fps)
 
-            func.check_events(self.current_shape)
+            func.check_events(self.current_shape, self.board)
             # TODO: Uncomment these lines to show title screen.
             #if self.title_screen:
             #    self.title_screen = func.update_title_screen(self.screen, self.settings)

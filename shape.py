@@ -12,16 +12,19 @@ class Shape():
         """Initializes a single random Tetris shape."""
         self.screen = screen
         self.settings = Settings()
+        self.utils = Utilities()
+        self.x = 200
+        self.y = 0
         self.initialize_shape()
         self.moving_right = False
         self.moving_left = False
+        self.clockwise = True
+
 
 
     def initialize_shape(self):
         """Initialize the shape."""
-        shape = self.get_random_shape()
-        self.set_starting_position(shape[0])
-        self.shape = self.build_shape(shape[0], shape[1])
+        self.get_random_shape()
         self.time_of_last_fall = pygame.time.get_ticks()
         self.fall_frequency = 500
         self.time_of_last_sidestep = pygame.time.get_ticks()
@@ -30,9 +33,15 @@ class Shape():
 
     def get_random_shape(self):
         """Gets a random shape."""
-        shapes = Utilities().shapes
-        choice = shapes[randrange(0, len(shapes))]
-        return choice
+        shapes = self.utils.shapes
+        index = randrange(0, len(shapes))
+        self.arr_shape = shapes[index]
+
+        shape_settings = self.utils.shape_info[index]
+        self.name = shape_settings[0]
+        self.image = shape_settings[1]
+
+        self.shape = self.build_shape(self.arr_shape, self.image)
 
 
     def build_shape(self, shape, image):
@@ -43,33 +52,34 @@ class Shape():
             for x in range(len(shape[y])):
                 if shape[y][x]:
                     row.append(Block(self.screen, image, self.x + (x * 40), self.y + (y * 40)))
-            new_shape.append(row)
+            if row:
+                new_shape.append(row)
         return new_shape
 
 
-    def set_starting_position(self, shape):
-        """Sets the starting position of the shape."""
-        self.x = 200
-        self.y = 40
-
-        # Check if O Shape
-        if len(shape[0]) == 2:
-            self.x = 240
-
-
-    def rotate(self, clockwise=True):
-        """
-        Rotates shape clockwise if it's possible to rotate.
-        If counter=False then rotate counter clockwise.
-        """
-        if self.unable_to_rotate():
-            return
-        if clockwise:
-            self.shape = [[shape[y][x] for y in reversed(range(len(shape)))]
-                                 for x in range(len(shape[0]))]
+    def rotate(self, board):
+        """Rotates shape if it's possible to rotate."""
+        if self.clockwise:
+            arr_shape = [[self.arr_shape[y][x] for y in reversed(range(len(self.arr_shape)))]
+                                 for x in range(len(self.arr_shape[0]))]
         else:
-            self.shape = [[shape[y][x] for y in range(len(shape))]
-					             for x in reversed(range(len(shape[0])))]
+            arr_shape = [[self.arr_shape[y][x] for y in range(len(self.arr_shape))]
+					             for x in reversed(range(len(self.arr_shape[0])))]
+
+        shape = self.build_shape(arr_shape, self.image)
+
+        for i in shape:
+            print(i)
+        if not board.check_collision(shape):
+            self.shape = shape
+            self.arr_shape = arr_shape
+            if self.name == 'S' or self.name == 'Z':
+                self.clockwise = not self.clockwise
+
+
+    def rotate_shape(self):
+        """ Returns a rotated copy of the shape."""
+
 
 
     def unable_to_rotate(self):
@@ -86,6 +96,7 @@ class Shape():
             for row in self.shape:
                 for block in row:
                     block.rect.y += 40
+            self.y += 40
             self.time_of_last_fall = current_time
 
         if self.moving_left and board.can_move_to_left(self.shape):
@@ -104,8 +115,10 @@ class Shape():
                 for block in row:
                     if direction == 'LEFT':
                         block.rect.x -= 40
+                        self.x -= 40
                     elif direction == 'RIGHT':
                         block.rect.x += 40
+                        self.x += 40
             self.time_of_last_sidestep = current_time
 
 

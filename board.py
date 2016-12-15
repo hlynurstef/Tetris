@@ -76,6 +76,18 @@ class Board():
         return int((block.rect.y / 40))
 
 
+    def check_collision(self, shape):
+        for row in shape:
+            for block in row:
+                x = self.get_x_index(block)
+                y = self.get_y_index(block)
+
+                if (x < 0 or x > self.settings.board_width-1
+                or y < 0 or y > self.settings.board_height-1
+                or self.board[y][x]):
+                    return True
+        return False
+
     def blitme(self):
         """Draw the board."""
         for row in self.board:
