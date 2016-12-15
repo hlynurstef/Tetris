@@ -122,6 +122,7 @@ class Shape():
         self.x = x
         self.y = y
         self.shape = self.build_shape(self.arr_shape, self.image)
+        self.time_of_last_fall = pygame.time.get_ticks()
 
 
     def blitme(self):
