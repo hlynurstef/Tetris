@@ -78,7 +78,7 @@ class Tetris():
         """Draw everything on the board."""
         self.screen.fill(self.settings.black)
         board_background = pygame.Rect(35, 0, 490, 720)
-        pygame.draw.rect(self.screen, self.settings.white, board_background)
+        pygame.draw.rect(self.screen, self.settings.flesh_color, board_background)
         self.screen.blit(self.settings.wall, (40,0))
         self.screen.blit(self.settings.wall, (480,0))
         self.screen.blit(self.settings.scoreboard, (525, 0))

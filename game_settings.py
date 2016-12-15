@@ -9,7 +9,7 @@ class Settings():
         # Colors.
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
-        (12,107,131)
+        self.flesh_color = (255, 214, 156)
         # I Block color
         self.light_blue = (49, 199, 239)
         # O Block color
