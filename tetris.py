@@ -56,9 +56,9 @@ class Tetris():
         if self.landed:
             self.board.add_to_board(self.current_shape)
             self.board.remove_full_lines()
+        else:
+            self.current_shape.blitme()
         self.board.blitme()
-
-        self.current_shape.blitme()
         pygame.display.update()
 
         #TODO: ATH, have not modified this function after it was moved from game_functions
