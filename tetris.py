@@ -125,7 +125,7 @@ class Tetris():
         return True
 
 
-    def quit_game():
+    def quit_game(self):
         """Quits pygame and python."""
         pygame.quit()
         sys.exit()
