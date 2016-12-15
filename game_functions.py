@@ -1,3 +1,4 @@
+import sys
 import pygame
 from block import Block
 from shape import Shape
@@ -44,12 +45,16 @@ def check_events(shape, board):
 
 
 def check_keydown_events(event, shape, board):
+    if event.key == pygame.K_ESCAPE:
+        quit_game()
     if event.key == pygame.K_LEFT:
         shape.moving_left = True
     if event.key == pygame.K_RIGHT:
         shape.moving_right = True
     if event.key == pygame.K_UP:
         shape.rotate(board)
+    if event.key == pygame.K_DOWN:
+        shape.fall_frequency = 100
 
 
 def check_keyup_events(event, shape):
@@ -57,6 +62,8 @@ def check_keyup_events(event, shape):
         shape.moving_left = False
     if event.key == pygame.K_RIGHT:
         shape.moving_right = False
+    if event.key == pygame.K_DOWN:
+        shape.fall_frequency = 500
 
 
 def check_events_title_screen():
@@ -74,4 +81,4 @@ def check_events_title_screen():
 def quit_game():
     """Quits pygame and python."""
     pygame.quit()
-    quit()
+    sys.exit()
