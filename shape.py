@@ -23,7 +23,7 @@ class Shape():
         self.set_starting_position(shape[0])
         self.shape = self.build_shape(shape[0], shape[1])
         self.time_of_last_fall = pygame.time.get_ticks()
-        self.fall_frequency = 750
+        self.fall_frequency = 500
         self.time_of_last_sidestep = pygame.time.get_ticks()
         self.side_frequency = 150
 
@@ -32,18 +32,17 @@ class Shape():
         """Gets a random shape."""
         shapes = Utilities().shapes
         choice = shapes[randrange(0, len(shapes))]
-        # TODO: not sure if this works as an assignment as a class variable or if it will go out of scope.
         return choice
 
 
-    def build_shape(self, shape, color):
+    def build_shape(self, shape, image):
         """Builds the shape."""
         new_shape = []
         for y in range(len(shape)):
             row = []
             for x in range(len(shape[y])):
                 if shape[y][x]:
-                    row.append(Block(self.screen, color, self.x + (x * 40), self.y + (y * 40)))
+                    row.append(Block(self.screen, image, self.x + (x * 40), self.y + (y * 40)))
             new_shape.append(row)
         return new_shape
 

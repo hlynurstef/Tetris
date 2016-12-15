@@ -9,7 +9,7 @@ class Settings():
         # Colors.
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
-
+        (12,107,131)
         # I Block color
         self.light_blue = (49, 199, 239)
         # O Block color
@@ -49,3 +49,10 @@ class Settings():
         self.wall = pygame.image.load('images/wall_full.png')
         self.title_screen = pygame.image.load('images/title_screen.png')
         self.scoreboard = pygame.image.load('images/scoreboard.png')
+        self.J_block = pygame.image.load('images/shapes/J.png')
+        self.L_block = pygame.image.load('images/shapes/L.png')
+        self.O_block = pygame.image.load('images/shapes/O.png')
+        self.S_block = pygame.image.load('images/shapes/S.png')
+        self.Z_block = pygame.image.load('images/shapes/Z.png')
+        self.T_block = pygame.image.load('images/shapes/T.png')
+        self.I_block = pygame.image.load('images/shapes/I.png')
