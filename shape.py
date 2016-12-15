@@ -77,11 +77,6 @@ class Shape():
                 self.clockwise = not self.clockwise
 
 
-    def rotate_shape(self):
-        """ Returns a rotated copy of the shape."""
-
-
-
     def unable_to_rotate(self):
         """Returns True if shape is unable to rotate."""
         # TODO: check if shape is able to rotate.
