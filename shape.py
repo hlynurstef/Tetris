@@ -68,8 +68,6 @@ class Shape():
 
         shape = self.build_shape(arr_shape, self.image)
 
-        for i in shape:
-            print(i)
         if not board.check_collision(shape):
             self.shape = shape
             self.arr_shape = arr_shape
@@ -95,25 +93,28 @@ class Shape():
             self.time_of_last_fall = current_time
 
         if self.moving_left and board.can_move_to_left(self.shape):
-            self.move_piece_sideways('LEFT', current_time)
+            self.move_shape_left(current_time)
         if self.moving_right and board.can_move_to_right(self.shape):
-            self.move_piece_sideways('RIGHT', current_time)
+            self.move_shape_right(current_time)
 
 
-    def move_piece_sideways(self, direction, current_time):
-        """
-        Moves shape either to the left or right.
-        direction='LEFT' or direction='RIGHT'.
-        """
+    def move_shape_right(self, current_time):
+        """Move shape to the left."""
         if current_time - self.time_of_last_sidestep > self.side_frequency:
             for row in self.shape:
                 for block in row:
-                    if direction == 'LEFT':
-                        block.rect.x -= 40
-                        self.x -= 40
-                    elif direction == 'RIGHT':
-                        block.rect.x += 40
-                        self.x += 40
+                    block.rect.x += 40
+            self.x += 40
+            self.time_of_last_sidestep = current_time
+
+
+    def move_shape_left(self, current_time):
+        """Move shape to the left."""
+        if current_time - self.time_of_last_sidestep > self.side_frequency:
+            for row in self.shape:
+                for block in row:
+                    block.rect.x -= 40
+            self.x -= 40
             self.time_of_last_sidestep = current_time
 
 
