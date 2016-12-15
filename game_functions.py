@@ -7,9 +7,12 @@ def update_screen(screen, settings, current_shape, board):
     """Update everything on screen and then draw the screen."""
     draw_board(screen, settings)
     landed = current_shape.update(board)
-    board.blitme()
+
     if landed:
         board.add_to_board(current_shape)
+        board.remove_full_lines()
+    board.blitme()
+
     current_shape.blitme()
     pygame.display.update()
     return landed
@@ -76,7 +79,6 @@ def check_events_title_screen():
             if event.key == pygame.K_RETURN:
                 return False
     return True
-
 
 def quit_game():
     """Quits pygame and python."""
