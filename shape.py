@@ -8,13 +8,13 @@ import pygame
 class Shape():
     """A class representing a single Tetris shape."""
 
-    def __init__(self, screen):
+    def __init__(self, screen, x=200, y=0):
         """Initializes a single random Tetris shape."""
         self.screen = screen
         self.settings = Settings()
         self.utils = Utilities()
-        self.x = 200
-        self.y = 0
+        self.x = x
+        self.y = y
         self.initialize_shape()
         self.moving_right = False
         self.moving_left = False
@@ -116,6 +116,12 @@ class Shape():
                     block.rect.x -= 40
             self.x -= 40
             self.time_of_last_sidestep = current_time
+
+
+    def set_position(self, x, y):
+        self.x = x
+        self.y = y
+        self.shape = self.build_shape(self.arr_shape, self.image)
 
 
     def blitme(self):

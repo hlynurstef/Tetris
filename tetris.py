@@ -26,6 +26,7 @@ class Tetris():
         self.title_screen = True
 
         self.current_shape = Shape(self.screen)
+        self.next_shape = Shape(self.screen, 600, 520)
         self.board = Board(self.screen)
 
         # Make a clock object to set fps limit.
@@ -46,7 +47,9 @@ class Tetris():
                 #func.update_screen(self.screen, self.settings)
             self.update_screen()
             if self.landed:
-                self.current_shape = Shape(self.screen)
+                self.next_shape.set_position(200,0)
+                self.current_shape = self.next_shape
+                self.next_shape = Shape(self.screen, 600, 520)
 
     def update_screen(self):
         """Update everything on screen and then draw the screen."""
@@ -58,6 +61,7 @@ class Tetris():
             self.board.remove_full_lines()
         else:
             self.current_shape.blitme()
+        self.next_shape.blitme()
         self.board.blitme()
         pygame.display.update()
 
