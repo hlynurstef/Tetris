@@ -1,12 +1,10 @@
-from game_settings import Settings
-
 class Utilities():
     """A class to store all utilities for Tetris."""
 
-    def __init__(self):
+    def __init__(self, settings):
         """Initializes the game utilities."""
-
-        self.settings = Settings()
+        self.settings = settings
+        
         # Shapes
         self.shapes = [[ [0, 0, 0],
                          [1, 1, 1],      # T Shape

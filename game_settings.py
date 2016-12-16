@@ -19,11 +19,6 @@ class Settings():
         self.blue = (0, 0, 255)             # J Block color
         self.brown = (239, 121, 33)         # L Block color
 
-        # Screen settings.
-        self.screen_width = 800
-        self.screen_height = 720
-        self.caption = "Tetris"
-
         self.fps = 60
         self.starting_fall_frequency = 800
 
@@ -35,17 +30,17 @@ class Settings():
         self.board_height = 18
 
         # Images
-        self.wall = pygame.image.load('images/wall_full.png')
-        self.title_screen = pygame.image.load('images/title_screen.png')
-        self.scoreboard = pygame.image.load('images/scoreboard.png')
-        self.game_over = pygame.image.load('images/game_over.png')
-        self.J_block = pygame.image.load('images/shapes/J.png')
-        self.L_block = pygame.image.load('images/shapes/L.png')
-        self.O_block = pygame.image.load('images/shapes/O.png')
-        self.S_block = pygame.image.load('images/shapes/S.png')
-        self.Z_block = pygame.image.load('images/shapes/Z.png')
-        self.T_block = pygame.image.load('images/shapes/T.png')
-        self.I_block = pygame.image.load('images/shapes/I.png')
+        self.wall = pygame.image.load('images/wall_full.png').convert()
+        self.title_screen = pygame.image.load('images/title_screen.png').convert()
+        self.scoreboard = pygame.image.load('images/scoreboard.png').convert()
+        self.game_over = pygame.image.load('images/game_over.png').convert()
+        self.J_block = pygame.image.load('images/shapes/J.png').convert()
+        self.L_block = pygame.image.load('images/shapes/L.png').convert()
+        self.O_block = pygame.image.load('images/shapes/O.png').convert()
+        self.S_block = pygame.image.load('images/shapes/S.png').convert()
+        self.Z_block = pygame.image.load('images/shapes/Z.png').convert()
+        self.T_block = pygame.image.load('images/shapes/T.png').convert()
+        self.I_block = pygame.image.load('images/shapes/I.png').convert()
 
         # Font
         self.font = 'fonts/game_boy.ttf'

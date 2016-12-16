@@ -1,18 +1,17 @@
-from game_settings import Settings
-from utilities import Utilities
 from random import randrange
 from block import Block
+from pygame.time import get_ticks
 import pygame
 
 
 class Shape():
     """A class representing a single Tetris shape."""
 
-    def __init__(self, screen, x=200, y=0):
+    def __init__(self, screen, settings, utils, x=200, y=0):
         """Initializes a single random Tetris shape."""
         self.screen = screen
-        self.settings = Settings()
-        self.utils = Utilities()
+        self.settings = settings
+        self.utils = utils
         self.x = x
         self.y = y
         self.initialize_shape()
@@ -25,9 +24,9 @@ class Shape():
     def initialize_shape(self):
         """Initialize the shape."""
         self.get_random_shape()
-        self.time_of_last_fall = pygame.time.get_ticks()
+        self.time_of_last_fall = get_ticks()
         self.fall_frequency = 800
-        self.time_of_last_sidestep = pygame.time.get_ticks()
+        self.time_of_last_sidestep = get_ticks()
         self.side_frequency = 150
 
 
@@ -51,7 +50,7 @@ class Shape():
             row = []
             for x in range(len(shape[y])):
                 if shape[y][x]:
-                    row.append(Block(self.screen, image, self.x + (x * 40), self.y + (y * 40)))
+                    row.append(Block(self.screen, self.settings, image, self.x + (x * 40), self.y + (y * 40)))
             if row:
                 new_shape.append(row)
         return new_shape
@@ -82,7 +81,7 @@ class Shape():
 
     def update(self, board, game_stats):
         """Update the position of the shape."""
-        current_time = pygame.time.get_ticks()
+        current_time = get_ticks()
         if current_time - self.time_of_last_fall > self.fall_frequency:
             if board.has_landed(self.shape):
                 return True
@@ -124,7 +123,7 @@ class Shape():
         self.x = x
         self.y = y
         self.shape = self.build_shape(self.arr_shape, self.image)
-        self.time_of_last_fall = pygame.time.get_ticks()
+        self.time_of_last_fall = get_ticks()
 
 
     def blitme(self):

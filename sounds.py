@@ -1,5 +1,4 @@
 from pygame.mixer import Sound
-from game_settings import Settings
 
 class Sounds():
     """A class to store all sounds in Tetris."""

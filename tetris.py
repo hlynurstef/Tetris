@@ -5,11 +5,11 @@ import sys
 from game_settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
+from utilities import Utilities
 from sounds import Sounds
 from block import Block
 from shape import Shape
 from board import Board
-#import game_functions as func
 
 class Tetris():
     """A class representing the game."""
@@ -19,28 +19,34 @@ class Tetris():
         pygame.mixer.pre_init(44100, 16, 1, 4096)
         pygame.init()
 
+
+        self.screen = pygame.display.set_mode((800, 720))
+        pygame.display.set_caption('Tetris')
+
         if platform.system() == 'Windows':
-            # Ensure correct screen size to be displayed.
+            # Ensure correct screen size to be displayed on Windows.
             ctypes.windll.user32.SetProcessDPIAware()
 
+        # Game objects.
         self.settings = Settings()
-        self.screen = pygame.display.set_mode((self.settings.screen_width,
-                                               self.settings.screen_height))
-        pygame.display.set_caption(self.settings.caption)
-
-
-        self.current_shape = Shape(self.screen)
-        self.next_shape = Shape(self.screen, 600, 520)
-        self.board = Board(self.screen)
+        self.utils = Utilities(self.settings)
+        self.board = Board(self.screen, self.settings)
         self.game_stats = GameStats()
         self.sounds = Sounds()
-        self.scoreboard = Scoreboard(self.screen, self.game_stats)
+        self.scoreboard = Scoreboard(self.screen, self.settings, self.game_stats)
 
+        # Tetris shapes.
+        self.current_shape = Shape(self.screen, self.settings, self.utils)
+        self.next_shape = Shape(self.screen, self.settings, self.utils, 600, 520)
+
+        # Game flags.
         self.title_screen = True
         self.game_over = False
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
+
+        # Sound Channel.
         self.channel = pygame.mixer.Channel(1)
 
 
@@ -74,7 +80,7 @@ class Tetris():
             if self.landed:
                 self.next_shape.set_position(200,0)
                 self.current_shape = self.next_shape
-                self.next_shape = Shape(self.screen, 600, 520)
+                self.next_shape = Shape(self.screen, self.settings, self.utils, 600, 520)
                 self.game_over = self.board.check_collision(self.current_shape.shape)
 
 

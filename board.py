@@ -1,12 +1,10 @@
-from game_settings import Settings
-
 class Board():
     """A class representing the playing board."""
 
-    def __init__(self, screen):
+    def __init__(self, screen, settings):
         """Initialize the board."""
         self.screen = screen
-        self.settings = Settings()
+        self.settings = settings
         self.initialize_board()
         self.height = self.settings.board_height
         self.width = self.settings.board_width
@@ -127,14 +125,6 @@ class Board():
             self.fix_block_positions()
             return True
 
-    """
-    def remove_full_lines(self):
-        new_board = [[None] * self.width if self.line_is_full(x) else x for x in reversed(self.board)]
-        new_board.reverse()
-        self.board = self.fix_board(new_board)
-        self.fix_block_positions()
-    """
-
 
     def clear_line(self, line_index):
         """ Clears a single line on the board."""
@@ -148,15 +138,6 @@ class Board():
             if not i:
                 return False
         return True
-
-    """
-    def line_is_empty(self, line_index):
-        Checks if the given line is empty.
-        for i in range(self.settings.board_with):
-            if self.board[line_index][i] != None:
-                return False
-        return True
-    """
 
 
     def blitme(self):
