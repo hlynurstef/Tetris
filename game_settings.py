@@ -10,20 +10,14 @@ class Settings():
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
         self.flesh_color = (255, 214, 156)
-        # I Block color
-        self.light_blue = (49, 199, 239)
-        # O Block color
-        self.yellow = (247, 211, 8)
-        # T Block color
-        self.purple = (173, 77, 156)
-        # S Block color
-        self.green = (0, 255, 0)
-        # Z Block color
-        self.red = (255, 0, 0)
-        # J Block color
-        self.blue = (0, 0, 255)
-        # L Block color
-        self.brown = (239, 121, 33)
+
+        self.light_blue = (49, 199, 239)    # I Block color
+        self.yellow = (247, 211, 8)         # O Block color
+        self.purple = (173, 77, 156)        # T Block color
+        self.green = (0, 255, 0)            # S Block color
+        self.red = (255, 0, 0)              # Z Block color
+        self.blue = (0, 0, 255)             # J Block color
+        self.brown = (239, 121, 33)         # L Block color
 
         # Screen settings.
         self.screen_width = 800
@@ -31,19 +25,14 @@ class Settings():
         self.caption = "Tetris"
 
         self.fps = 60
+        self.starting_fall_frequency = 800
 
         # Size of each block in grid
         self.scale = 40
 
-        # Screen dimensions
-        # Single block: 40x40 pixels
-        # Screen width: 20 Blocks
-        # Screen height: 18 Blocks
-        # Board size: 10 Blocks x 18 Blocks
+        # Board dimensions
         self.board_width = 10
         self.board_height = 18
-        # Left side: 2 Blocks
-        # Right side: 7 Blocs
 
         # Images
         self.wall = pygame.image.load('images/wall_full.png')
@@ -56,3 +45,7 @@ class Settings():
         self.Z_block = pygame.image.load('images/shapes/Z.png')
         self.T_block = pygame.image.load('images/shapes/T.png')
         self.I_block = pygame.image.load('images/shapes/I.png')
+
+        # Font
+        self.font = 'fonts/game_boy.ttf'
+        self.font_size = 40
