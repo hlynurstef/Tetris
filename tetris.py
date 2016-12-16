@@ -5,6 +5,7 @@ import sys
 from game_settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
+from sounds import Sounds
 from block import Block
 from shape import Shape
 from board import Board
@@ -15,6 +16,7 @@ class Tetris():
 
     def __init__(self):
         """Initialize game."""
+        pygame.mixer.pre_init(44100, 16, 1, 4096)
         pygame.init()
 
         if platform.system() == 'Windows':
@@ -31,6 +33,7 @@ class Tetris():
         self.next_shape = Shape(self.screen, 600, 520)
         self.board = Board(self.screen)
         self.game_stats = GameStats()
+        self.sounds = Sounds()
         self.scoreboard = Scoreboard(self.screen, self.game_stats)
 
         # Make a clock object to set fps limit.
@@ -39,6 +42,7 @@ class Tetris():
 
     def run_game(self):
         """Main function for Tetris."""
+        self.sounds.a_type_music.play(-1)
         while True:
             # Delta time calculation.
             self.clock.tick(self.settings.fps)
