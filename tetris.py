@@ -35,6 +35,7 @@ class Tetris():
         self.game_stats = GameStats()
         self.sounds = Sounds()
         self.scoreboard = Scoreboard(self.screen, self.game_stats)
+        self.game_over = False
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
@@ -43,7 +44,7 @@ class Tetris():
     def run_game(self):
         """Main function for Tetris."""
         self.sounds.a_type_music.play(-1)
-        while True:
+        while not self.game_over:
             # Delta time calculation.
             self.clock.tick(self.settings.fps)
             print('FPS:', self.clock.get_fps())
@@ -59,6 +60,11 @@ class Tetris():
                 self.next_shape.set_position(200,0)
                 self.current_shape = self.next_shape
                 self.next_shape = Shape(self.screen, 600, 520)
+                self.game_over = self.board.check_collision(self.current_shape.shape)
+
+        print("YOU LOST SUCKER")
+        self.quit_game()
+
 
     def update_screen(self):
         """Update everything on screen and then draw the screen."""
