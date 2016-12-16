@@ -27,7 +27,7 @@ class Tetris():
         self.screen = pygame.display.set_mode((self.settings.screen_width,
                                                self.settings.screen_height))
         pygame.display.set_caption(self.settings.caption)
-        self.title_screen = True
+
 
         self.current_shape = Shape(self.screen)
         self.next_shape = Shape(self.screen, 600, 520)
@@ -35,26 +35,41 @@ class Tetris():
         self.game_stats = GameStats()
         self.sounds = Sounds()
         self.scoreboard = Scoreboard(self.screen, self.game_stats)
+
+        self.title_screen = True
         self.game_over = False
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
+        self.channel = pygame.mixer.Channel(1)
 
 
     def run_game(self):
         """Main function for Tetris."""
-        self.sounds.a_type_music.play(-1)
+
+        self.run_title_screen()
+        while True:
+            self.run_new_game()
+            self.run_game_over()
+
+
+    def run_title_screen(self):
+        """Run title screen."""
+        self.channel.play(self.sounds.title_music, -1)
+        while self.title_screen:
+            self.update_title_screen()
+
+
+    def run_new_game(self):
+        """Run gameplay."""
+        self.channel.stop()
+        self.channel.play(self.sounds.a_type_music, -1)
         while not self.game_over:
             # Delta time calculation.
             self.clock.tick(self.settings.fps)
             print('FPS:', self.clock.get_fps())
 
             self.check_events()
-            # TODO: Uncomment these lines to show title screen.
-            #if self.title_screen:
-            #    self.title_screen = func.update_title_screen(self.screen, self.settings)
-            #else:
-                #func.update_screen(self.screen, self.settings)
             self.update_screen()
             if self.landed:
                 self.next_shape.set_position(200,0)
@@ -62,9 +77,14 @@ class Tetris():
                 self.next_shape = Shape(self.screen, 600, 520)
                 self.game_over = self.board.check_collision(self.current_shape.shape)
 
-        while True:
+
+    def run_game_over(self):
+        """Run game over sreen."""
+        self.channel.stop()
+        self.channel.play(self.sounds.high_score_music, -1)
+        while self.game_over:
             self.draw_game_over()
-            self.check_events()
+            self.check_events_game_over()
             pygame.display.update()
 
 
@@ -83,13 +103,12 @@ class Tetris():
         self.board.blitme()
         pygame.display.update()
 
-        #TODO: ATH, have not modified this function after it was moved from game_functions
-    def update_title_screen(screen, settings):
+
+    def update_title_screen(self):
         """Update everything on the title screen, then draw it."""
-        screen.blit(settings.title_screen, (0,0))
-        display_title_screen = check_events_title_screen()
+        self.screen.blit(self.settings.title_screen, (0,0))
+        self.check_events_title_screen()
         pygame.display.update()
-        return display_title_screen
 
 
     def draw_board(self):
@@ -143,17 +162,28 @@ class Tetris():
         if event.key == pygame.K_DOWN:
             self.game_stats.set_level_fall_frequency()
 
-    #TODO: ATH, have not modified this function after it was moved from game_functions
-    def check_events_title_screen():
-        """
-        Check for events on title screen and respond to them.
-        Returns False if enter key is pressed to stop title_screen.
-        """
+
+    def check_events_title_screen(self):
+        """Check for events on title screen and respond to them."""
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.quit_game()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    return False
-        return True
+                    self.title_screen = False
+                if event.key == pygame.K_ESCAPE:
+                    self.quit_game()
+
+    def check_events_game_over(self):
+        """Check for events on game over screen and respond to them."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.quit_game()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.game_over = False
+                if event.key == pygame.K_ESCAPE:
+                    self.quit_game()
 
 
     def quit_game(self):
