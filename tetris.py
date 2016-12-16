@@ -62,8 +62,10 @@ class Tetris():
                 self.next_shape = Shape(self.screen, 600, 520)
                 self.game_over = self.board.check_collision(self.current_shape.shape)
 
-        print("YOU LOST SUCKER")
-        self.quit_game()
+        while True:
+            self.draw_game_over()
+            self.check_events()
+            pygame.display.update()
 
 
     def update_screen(self):
@@ -98,6 +100,15 @@ class Tetris():
         self.screen.blit(self.settings.wall, (40,0))
         self.screen.blit(self.settings.wall, (480,0))
         self.screen.blit(self.settings.scoreboard, (525, 0))
+
+
+    def update_game_over_screen():
+        print("wooohoo")
+
+    def draw_game_over(self):
+        """Drawing the game over screen."""
+        self.screen.blit(self.settings.game_over, (80,0))
+
 
 
     def check_events(self):

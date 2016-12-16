@@ -38,6 +38,7 @@ class Settings():
         self.wall = pygame.image.load('images/wall_full.png')
         self.title_screen = pygame.image.load('images/title_screen.png')
         self.scoreboard = pygame.image.load('images/scoreboard.png')
+        self.game_over = pygame.image.load('images/game_over.png')
         self.J_block = pygame.image.load('images/shapes/J.png')
         self.L_block = pygame.image.load('images/shapes/L.png')
         self.O_block = pygame.image.load('images/shapes/O.png')

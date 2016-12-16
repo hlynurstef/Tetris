@@ -10,3 +10,4 @@ class Sounds():
         self.b_type_music = Sound('sounds/music/b_type_music.ogg')
         self.c_type_music = Sound('sounds/music/c_type_music.ogg')
         self.high_score_music = Sound('sounds/music/high_score_music.ogg')
+        self.level_up = Sound('sounds/sound_effects/LEVELUP.ogg')
