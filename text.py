@@ -9,7 +9,7 @@ class Text():
         self.screen = screen
         self.settings = settings
         self.font = Font(self.settings.font, self.settings.font_size)
-        self.image = self.font.render(text, True, self.settings.black)
+        self.image = self.font.render(text, False, self.settings.black).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.right = x
         self.rect.y = y
