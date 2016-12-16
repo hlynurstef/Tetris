@@ -93,15 +93,15 @@ class Board():
         return False
 
 
-    def fix_board(self, board):
+    def fix_board(self):
         new_board = []
         for i in reversed(range(self.height)):
-            if board[i] != [None] * self.width:
-                new_board.append(board[i])
+            if self.board[i] != [None] * self.width:
+                new_board.append(self.board[i])
 
         new_board += [[None] * self.width for x in range(self.height - len(new_board))]
         new_board.reverse()
-        return new_board
+        self.board = new_board
 
 
     def fix_block_positions(self):
@@ -112,20 +112,28 @@ class Board():
                     self.board[y][x].rect.y = self.y + (y * 40)
 
 
-    """
-    def clear_full_lines(self):
-        Removes all lines that are full.
+    def clear_full_lines(self, game_stats):
+        """Removes all lines that are full."""
         lines_removed = 0
+        lines_cleared = []
         for y in reversed(range(self.settings.board_height)):
             if self.line_is_full(y):
                 self.clear_line(y)
-        self.fix_board()"""
+                lines_cleared.append(y)
+                lines_removed += 1
+        if lines_removed > 0:
+            game_stats.increment_lines(lines_removed)
+            self.fix_board()
+            self.fix_block_positions()
+            return True
 
+    """
     def remove_full_lines(self):
         new_board = [[None] * self.width if self.line_is_full(x) else x for x in reversed(self.board)]
         new_board.reverse()
         self.board = self.fix_board(new_board)
         self.fix_block_positions()
+    """
 
 
     def clear_line(self, line_index):
@@ -134,20 +142,21 @@ class Board():
             self.board[line_index][x] = None
 
 
-    def line_is_full(self, line):
+    def line_is_full(self, line_index):
         """Checks if the given line is full."""
-        for x in line:
-            if not x :
+        for i in self.board[line_index]:
+            if not i:
                 return False
         return True
 
-
+    """
     def line_is_empty(self, line_index):
-        """Checks if the given line is empty."""
+        Checks if the given line is empty.
         for i in range(self.settings.board_with):
             if self.board[line_index][i] != None:
                 return False
         return True
+    """
 
 
     def blitme(self):

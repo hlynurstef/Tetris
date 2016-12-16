@@ -26,7 +26,7 @@ class Shape():
         """Initialize the shape."""
         self.get_random_shape()
         self.time_of_last_fall = pygame.time.get_ticks()
-        self.fall_frequency = 500
+        self.fall_frequency = 800
         self.time_of_last_sidestep = pygame.time.get_ticks()
         self.side_frequency = 150
 
@@ -80,7 +80,7 @@ class Shape():
         # TODO: check if shape is able to rotate.
 
 
-    def update(self, board):
+    def update(self, board, game_stats):
         """Update the position of the shape."""
         current_time = pygame.time.get_ticks()
         if current_time - self.time_of_last_fall > self.fall_frequency:
@@ -96,6 +96,8 @@ class Shape():
             self.move_shape_left(current_time)
         if self.moving_right and board.can_move_to_right(self.shape):
             self.move_shape_right(current_time)
+
+        self.fall_frequency = game_stats.fall_frequency
 
 
     def move_shape_right(self, current_time):

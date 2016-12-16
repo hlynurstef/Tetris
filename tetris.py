@@ -3,6 +3,8 @@ import ctypes
 import platform
 import sys
 from game_settings import Settings
+from game_stats import GameStats
+from scoreboard import Scoreboard
 from block import Block
 from shape import Shape
 from board import Board
@@ -28,6 +30,8 @@ class Tetris():
         self.current_shape = Shape(self.screen)
         self.next_shape = Shape(self.screen, 600, 520)
         self.board = Board(self.screen)
+        self.game_stats = GameStats()
+        self.scoreboard = Scoreboard(self.screen, self.game_stats)
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
@@ -38,6 +42,7 @@ class Tetris():
         while True:
             # Delta time calculation.
             self.clock.tick(self.settings.fps)
+            print('FPS:', self.clock.get_fps())
 
             self.check_events()
             # TODO: Uncomment these lines to show title screen.
@@ -54,13 +59,14 @@ class Tetris():
     def update_screen(self):
         """Update everything on screen and then draw the screen."""
         self.draw_board()
-        self.landed = self.current_shape.update(self.board)
-
+        self.landed = self.current_shape.update(self.board, self.game_stats)
+        lines_were_cleared = False
         if self.landed:
             self.board.add_to_board(self.current_shape)
-            self.board.remove_full_lines()
+            lines_were_cleared = self.board.clear_full_lines(self.game_stats)
         else:
             self.current_shape.blitme()
+        self.scoreboard.blitme(lines_were_cleared)
         self.next_shape.blitme()
         self.board.blitme()
         pygame.display.update()
@@ -105,7 +111,7 @@ class Tetris():
         if event.key == pygame.K_UP:
             self.current_shape.rotate(self.board)
         if event.key == pygame.K_DOWN:
-            self.current_shape.fall_frequency = 100
+            self.game_stats.key_down_fall_frequency()
 
 
     def check_keyup_events(self, event):
@@ -114,7 +120,7 @@ class Tetris():
         if event.key == pygame.K_RIGHT:
             self.current_shape.moving_right = False
         if event.key == pygame.K_DOWN:
-            self.current_shape.fall_frequency = 500
+            self.game_stats.set_level_fall_frequency()
 
     #TODO: ATH, have not modified this function after it was moved from game_functions
     def check_events_title_screen():
