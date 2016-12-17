@@ -10,6 +10,7 @@ from sounds import Sounds
 from block import Block
 from shape import Shape
 from board import Board
+from text import Text
 
 class Tetris():
     """A class representing the game."""
@@ -42,6 +43,7 @@ class Tetris():
         # Game flags.
         self.title_screen = True
         self.game_over = False
+        self.show_fps = False
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
@@ -77,7 +79,7 @@ class Tetris():
         while not self.game_over:
             # Delta time calculation.
             self.clock.tick(self.settings.fps)
-            print('FPS:', self.clock.get_fps())
+            #print('FPS:', self.clock.get_fps())
 
             self.check_events()
             self.update_screen()
@@ -95,6 +97,8 @@ class Tetris():
         while self.game_over:
             self.draw_game_over()
             self.check_events_game_over()
+            if self.show_fps:
+                self.display_fps()
             pygame.display.update()
 
 
@@ -111,6 +115,9 @@ class Tetris():
         self.scoreboard.blitme(lines_were_cleared)
         self.next_shape.blitme()
         self.board.blitme()
+
+        if self.show_fps:
+            self.display_fps()
         pygame.display.update()
 
 
@@ -118,7 +125,16 @@ class Tetris():
         """Update everything on the title screen, then draw it."""
         self.screen.blit(self.settings.title_screen, (0,0))
         self.check_events_title_screen()
+        if self.show_fps:
+            self.display_fps()
         pygame.display.update()
+
+
+    def display_fps(self):
+        """Display fps on screen."""
+        pygame.draw.rect(self.screen, self.settings.black, pygame.Rect(0, 0, 80, 40))
+        fps_text = Text(self.screen, self.settings, str(int(self.clock.get_fps())), self.settings.white, 80, 0)
+        fps_text.blitme()
 
 
     def draw_board(self):
@@ -162,6 +178,8 @@ class Tetris():
             self.current_shape.rotate(self.board)
         if event.key == pygame.K_DOWN:
             self.game_stats.key_down_fall_frequency()
+        if event.key == pygame.K_f:
+            self.show_fps = not self.show_fps
 
 
     def check_keyup_events(self, event):
@@ -183,6 +201,8 @@ class Tetris():
                     self.title_screen = False
                 if event.key == pygame.K_ESCAPE:
                     self.quit_game()
+                if event.key == pygame.K_f:
+                    self.show_fps = not self.show_fps
 
     def check_events_game_over(self):
         """Check for events on game over screen and respond to them."""
@@ -194,6 +214,8 @@ class Tetris():
                     self.game_over = False
                 if event.key == pygame.K_ESCAPE:
                     self.quit_game()
+                if event.key == pygame.K_f:
+                    self.show_fps = not self.show_fps
 
 
     def quit_game(self):

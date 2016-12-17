@@ -1,15 +1,14 @@
 from pygame.font import Font
-from game_settings import Settings
 
 class Text():
     """A class representing text."""
 
-    def __init__(self, screen, settings, text, x, y):
+    def __init__(self, screen, settings, text, color, x, y):
         """Initialize text."""
         self.screen = screen
         self.settings = settings
         self.font = Font(self.settings.font, self.settings.font_size)
-        self.image = self.font.render(text, False, self.settings.black).convert_alpha()
+        self.image = self.font.render(text, False, color).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.right = x
         self.rect.y = y

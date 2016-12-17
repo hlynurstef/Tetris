@@ -17,19 +17,19 @@ class Scoreboard():
     def prep_score(self):
         """Create a rendered image for score."""
         score = str(self.game_stats.score)
-        self.score_image = Text(self.screen, self.settings, score, 765, 120)
+        self.score_image = Text(self.screen, self.settings, score, self.settings.black, 765, 120)
 
 
     def prep_level(self):
         """Create a rendered image for level."""
         level = str(self.game_stats.level)
-        self.level_image = Text(self.screen, self.settings, level, 725, 280)
+        self.level_image = Text(self.screen, self.settings, level, self.settings.black, 725, 280)
 
 
     def prep_lines(self):
         """Create a rendered image for lines."""
         lines = str(self.game_stats.lines)
-        self.lines_image = Text(self.screen, self.settings, lines, 725, 400)
+        self.lines_image = Text(self.screen, self.settings, lines, self.settings.black, 725, 400)
 
 
     def prep_scoreboard(self):
