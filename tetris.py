@@ -70,6 +70,10 @@ class Tetris():
         """Run gameplay."""
         self.channel.stop()
         self.channel.play(self.sounds.a_type_music, -1)
+        self.board.clear_board()
+        self.game_stats.reset_game_stats()
+        self.scoreboard.prep_scoreboard()
+
         while not self.game_over:
             # Delta time calculation.
             self.clock.tick(self.settings.fps)

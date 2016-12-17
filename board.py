@@ -5,9 +5,9 @@ class Board():
         """Initialize the board."""
         self.screen = screen
         self.settings = settings
-        self.initialize_board()
         self.height = self.settings.board_height
         self.width = self.settings.board_width
+        self.initialize_board()
         self.x = 80
         self.y = 0
 
@@ -18,14 +18,17 @@ class Board():
 
 
     def clear_board(self):
-        """Returns an empty board."""
+        """Clears the board."""
+        self.board = [[None] * self.width for row in range(self.height)]
+
+        """
         board = []
         for row in range(self.settings.board_height):
             row = []
             for col in range(self.settings.board_width):
                 row.append(None)
             board.append(row)
-        self.board = board
+        self.board = board"""
 
 
     def add_to_board(self, shape):

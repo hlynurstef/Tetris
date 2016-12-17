@@ -19,7 +19,7 @@ class Settings():
         self.blue = (0, 0, 255)             # J Block color
         self.brown = (239, 121, 33)         # L Block color
 
-        self.fps = 300
+        self.fps = 60
         self.starting_fall_frequency = 800
 
         # Size of each block in grid
