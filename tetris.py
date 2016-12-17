@@ -65,6 +65,7 @@ class Tetris():
         """Run title screen."""
         self.channel.play(self.sounds.title_music, -1)
         while self.title_screen:
+            self.clock.tick(self.settings.fps)
             self.update_title_screen()
 
 
@@ -77,9 +78,7 @@ class Tetris():
         self.scoreboard.prep_scoreboard()
 
         while not self.game_over:
-            # Delta time calculation.
             self.clock.tick(self.settings.fps)
-            #print('FPS:', self.clock.get_fps())
 
             self.check_events()
             self.update_screen()
@@ -95,6 +94,7 @@ class Tetris():
         self.channel.stop()
         self.channel.play(self.sounds.high_score_music, -1)
         while self.game_over:
+            self.clock.tick(self.settings.fps)
             self.draw_game_over()
             self.check_events_game_over()
             if self.show_fps:
