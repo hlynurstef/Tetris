@@ -23,8 +23,16 @@ class DB_conn():
                         VALUES(?,?)''', (name, str(score)))
 
     def get_top_ten(self):
-        self.c.execute('SELECT H.name, H.score FROM high_score as H')
+        self.c.execute('''SELECT name, score
+                        FROM high_score
+                        ORDER BY score DESC''')
         print(self.c.fetchmany(10))
+
+    def get_all_scores(self):
+        self.c.execute('''SELECT name, score
+                        FROM high_score
+                        ORDER BY score DESC''')
+        print(self.c.fetchall())
 
     def close_connection(self):
         self.conn.commit()
