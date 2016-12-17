@@ -11,6 +11,7 @@ from block import Block
 from shape import Shape
 from board import Board
 from text import Text
+from db_conn import DB_conn
 
 class Tetris():
     """A class representing the game."""
@@ -50,6 +51,9 @@ class Tetris():
 
         # Sound Channel.
         self.channel = pygame.mixer.Channel(1)
+
+        # Database connection.
+        self.db = DB_conn()
 
 
     def run_game(self):
@@ -100,7 +104,8 @@ class Tetris():
             if self.show_fps:
                 self.display_fps()
             pygame.display.update()
-
+        self.db.add_score('player', self.game_stats.score)
+        self.db.get_top_ten()
 
     def update_screen(self):
         """Update everything on screen and then draw the screen."""
@@ -220,6 +225,7 @@ class Tetris():
 
     def quit_game(self):
         """Quits pygame and python."""
+        self.db.close_connection()
         pygame.quit()
         sys.exit()
 
