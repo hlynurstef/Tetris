@@ -259,6 +259,8 @@ class Tetris():
     def check_keydown_events(self, event):
         if event.key == pygame.K_ESCAPE:
             self.quit_game()
+        if event.key == pygame.K_SPACE:
+            self.current_shape.drop = True
         if event.key == pygame.K_LEFT:
             self.current_shape.moving_left = True
         if event.key == pygame.K_RIGHT:

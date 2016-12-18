@@ -22,6 +22,7 @@ class Shape():
         self.moving_fast = False
         self.first_press_down_key = True
         self.moving_fast_start_index = 1
+        self.drop = False
 
 
     def initialize_shape(self):
@@ -78,14 +79,12 @@ class Shape():
                 self.clockwise = not self.clockwise
 
 
-    def unable_to_rotate(self):
-        """Returns True if shape is unable to rotate."""
-        # TODO: check if shape is able to rotate.
-
-
     def update(self, board, game_stats):
         """Update the position of the shape."""
         current_time = get_ticks()
+        if self.drop:
+            self.drop_shape_down(board, game_stats)
+            return True
         if current_time - self.time_of_last_fall > self.fall_frequency:
             if board.has_landed(self.shape):
                 if self.moving_fast:
@@ -100,10 +99,22 @@ class Shape():
         if self.moving_left and board.can_move_to_left(self.shape):
             self.move_shape_left(current_time)
         if self.moving_right and board.can_move_to_right(self.shape):
-
             self.move_shape_right(current_time)
 
         self.fall_frequency = game_stats.fall_frequency
+
+
+    def drop_shape_down(self, board, game_stats):
+        """Drops the shape to the highest point at current Y location."""
+        while not board.has_landed(self.shape):
+            #if board.has_landed(self.shape):
+            #    if self.moving_fast:
+            #        game_stats.add_score((self.get_lowest_y_value() // 40) - self.moving_fast_start_index)
+            #    return True
+            for row in self.shape:
+                for block in row:
+                    block.rect.y += 40
+            self.y += 40
 
 
     def move_shape_right(self, current_time):
