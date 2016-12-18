@@ -50,6 +50,7 @@ class Tetris():
         self.title_screen = True
         self.game_over = False
         self.show_fps = False
+        self.pause = False
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
@@ -88,6 +89,11 @@ class Tetris():
 
             self.check_events()
             self.update_screen()
+            if self.pause:
+                self.music_channel.pause()
+                self.draw_pause_screen()
+                self.music_channel.unpause()
+
             if self.landed:
                 self.next_shape.set_position(200,0)
                 self.current_shape = self.next_shape
@@ -232,6 +238,16 @@ class Tetris():
         pygame.display.update()
 
 
+    def draw_pause_screen(self):
+        """Drawing the game over screen."""
+        while self.pause:
+            self.check_events()
+            self.screen.blit(self.settings.pause, (80,0))
+            if self.show_fps:
+                self.display_fps()
+            pygame.display.update()
+
+
     def check_events(self):
         """Check for events and respond to them."""
         for event in pygame.event.get():
@@ -257,6 +273,9 @@ class Tetris():
             self.current_shape.start_moving_fast()
         if event.key == pygame.K_f:
             self.show_fps = not self.show_fps
+        if event.key == pygame.K_RETURN:
+            self.pause = not self.pause
+            self.sounds.pause.play()
 
 
     def check_keyup_events(self, event):
