@@ -1,4 +1,5 @@
 import pygame
+from pygame.time import get_ticks
 import ctypes
 import platform
 import sys
@@ -21,6 +22,10 @@ class Tetris():
         pygame.mixer.pre_init(44100, 16, 1, 4096)
         pygame.init()
 
+        # Sound Channels.
+        self.music_channel = pygame.mixer.Channel(1)
+        self.effect_channel = pygame.mixer.Channel(2)
+
 
         self.screen = pygame.display.set_mode((800, 720))
         pygame.display.set_caption('Tetris')
@@ -29,17 +34,18 @@ class Tetris():
             # Ensure correct screen size to be displayed on Windows.
             ctypes.windll.user32.SetProcessDPIAware()
 
+
         # Game objects.
         self.settings = Settings()
         self.utils = Utilities(self.settings)
-        self.board = Board(self.screen, self.settings)
         self.game_stats = GameStats()
         self.sounds = Sounds()
+        self.board = Board(self.screen, self.settings, self.sounds, self.effect_channel)
         self.scoreboard = Scoreboard(self.screen, self.settings, self.game_stats)
 
         # Tetris shapes.
-        self.current_shape = Shape(self.screen, self.settings, self.utils)
-        self.next_shape = Shape(self.screen, self.settings, self.utils, 600, 520)
+        self.current_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils)
+        self.next_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils, 600, 520)
 
         # Game flags.
         self.title_screen = True
@@ -48,9 +54,6 @@ class Tetris():
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
-
-        # Sound Channel.
-        self.channel = pygame.mixer.Channel(1)
 
         # Database connection.
         self.db = DBConnection()
@@ -67,7 +70,7 @@ class Tetris():
 
     def run_title_screen(self):
         """Run title screen."""
-        self.channel.play(self.sounds.title_music, -1)
+        self.music_channel.play(self.sounds.title_music, -1)
         while self.title_screen:
             self.clock.tick(self.settings.fps)
             self.update_title_screen()
@@ -75,8 +78,8 @@ class Tetris():
 
     def run_new_game(self):
         """Run gameplay."""
-        self.channel.stop()
-        self.channel.play(self.sounds.a_type_music, -1)
+        self.music_channel.stop()
+        self.music_channel.play(self.sounds.a_type_music, -1)
         self.board.clear_board()
         self.game_stats.reset_game_stats()
         self.scoreboard.prep_scoreboard()
@@ -89,35 +92,39 @@ class Tetris():
             if self.landed:
                 self.next_shape.set_position(200,0)
                 self.current_shape = self.next_shape
-                self.next_shape = Shape(self.screen, self.settings, self.utils, 600, 520)
+                self.next_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils, 600, 520)
                 self.game_over = self.board.check_collision(self.current_shape.shape)
+                if self.game_over:
+                    self.draw_game_over_wall()
 
 
     def run_game_over(self):
         """Run game over sreen."""
-        self.channel.stop()
-        self.channel.play(self.sounds.high_score_music, -1)
+        self.effect_channel.play(self.sounds.game_over)
         while self.game_over:
             self.clock.tick(self.settings.fps)
-            self.draw_game_over()
             self.check_events_game_over()
-            if self.show_fps:
-                self.display_fps()
-            pygame.display.update()
+            self.draw_game_over()
+
         self.db.add_score('player', self.game_stats.score)
         self.db.get_top_ten()
+
 
     def update_screen(self):
         """Update everything on screen and then draw the screen."""
         self.draw_board()
         self.landed = self.current_shape.update(self.board, self.game_stats)
-        lines_were_cleared = False
+
         if self.landed:
             self.board.add_to_board(self.current_shape)
-            lines_were_cleared = self.board.clear_full_lines(self.game_stats)
+            full_lines = self.board.get_full_lines()
+            if full_lines:
+                self.display_full_lines(full_lines)
+                self.board.clear_full_lines(full_lines, self.game_stats)
         else:
             self.current_shape.blitme()
-        self.scoreboard.blitme(lines_were_cleared)
+
+        self.scoreboard.blitme()
         self.next_shape.blitme()
         self.board.blitme()
 
@@ -152,13 +159,72 @@ class Tetris():
         self.screen.blit(self.settings.scoreboard, (525, 0))
 
 
+    def draw_game_over_wall(self):
+        """Draw the game over wall."""
+        self.music_channel.stop()
+        self.effect_channel.play(self.sounds.game_over_wall)
+
+        self.board.fill_row_with_wall(self.settings.board_height-1)
+        current_row = self.settings.board_height-2
+        self.board.blitme()
+
+        time_of_last_draw = get_ticks()
+        draw_time = 50
+        while current_row >= 0:
+            self.clock.tick(self.settings.fps)
+            current_time = get_ticks()
+            if current_time - time_of_last_draw > draw_time:
+                self.board.fill_row_with_wall(current_row)
+                current_row -= 1
+                self.board.blitme()
+                time_of_last_draw = current_time
+            if self.show_fps:
+                self.display_fps()
+            pygame.display.update()
+        pygame.time.delay(400)
+
+
+    def display_full_lines(self, line_indexes):
+        """Makes the cleared lines blink."""
+        if len(line_indexes) == 4:
+            self.effect_channel.play(self.sounds.tetris_clear)
+        else:
+            self.effect_channel.play(self.sounds.clear_line)
+        self.board.blitme()
+        for line in line_indexes:
+            pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
+        self.scoreboard.blitme()
+        pygame.display.update()
+        pygame.time.delay(150)
+
+        for x in range(3):
+            self.clock.tick(self.settings.fps)
+            self.board.blitme()
+            self.scoreboard.blitme()
+            pygame.display.update()
+            pygame.time.delay(150)
+
+            self.clock.tick(self.settings.fps)
+            for line in line_indexes:
+                pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
+            self.scoreboard.blitme()
+            pygame.display.update()
+            pygame.time.delay(150)
+
+        pygame.time.delay(150)
+        self.effect_channel.play(self.sounds.board_land_after_clear)
+
+
     def update_game_over_screen():
         print("wooohoo")
+
 
     def draw_game_over(self):
         """Drawing the game over screen."""
         self.screen.blit(self.settings.game_over, (80,0))
-
+        if self.show_fps:
+            self.display_fps()
+        pygame.display.update()
 
 
     def check_events(self):
@@ -183,6 +249,7 @@ class Tetris():
             self.current_shape.rotate(self.board)
         if event.key == pygame.K_DOWN:
             self.game_stats.key_down_fall_frequency()
+            self.current_shape.start_moving_fast()
         if event.key == pygame.K_f:
             self.show_fps = not self.show_fps
 
@@ -194,6 +261,7 @@ class Tetris():
             self.current_shape.moving_right = False
         if event.key == pygame.K_DOWN:
             self.game_stats.set_level_fall_frequency()
+            self.current_shape.stop_moving_fast()
 
 
     def check_events_title_screen(self):
@@ -208,6 +276,7 @@ class Tetris():
                     self.quit_game()
                 if event.key == pygame.K_f:
                     self.show_fps = not self.show_fps
+
 
     def check_events_game_over(self):
         """Check for events on game over screen and respond to them."""

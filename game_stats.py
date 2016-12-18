@@ -32,9 +32,14 @@ class GameStats():
         self.score += self.base_line_values[num_lines] * (self.level + 1)
 
 
+    def add_score(self, score):
+        """Adds to total score."""
+        self.score += score
+
+
     def key_down_fall_frequency(self):
         """Sets fall frequency to 100 when player presses down key."""
-        self.fall_frequency = 100
+        self.fall_frequency = 50
 
 
     def set_level_fall_frequency(self):

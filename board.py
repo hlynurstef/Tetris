@@ -1,10 +1,17 @@
+from block import Block
+from pygame import draw
+from pygame import Rect
+import pygame
+
 class Board():
     """A class representing the playing board."""
 
-    def __init__(self, screen, settings):
+    def __init__(self, screen, settings, sounds, effect_channel):
         """Initialize the board."""
         self.screen = screen
         self.settings = settings
+        self.sounds = sounds
+        self.effect_channel = effect_channel
         self.height = self.settings.board_height
         self.width = self.settings.board_width
         self.initialize_board()
@@ -47,6 +54,7 @@ class Board():
                 x = self.get_x_index(block)
                 y = self.get_y_index(block) + 1
                 if y >= self.settings.board_height or self.board[y][x]:
+                    self.effect_channel.play(self.sounds.shape_land)
                     return True
         return False
 
@@ -113,20 +121,22 @@ class Board():
                     self.board[y][x].rect.y = self.y + (y * 40)
 
 
-    def clear_full_lines(self, game_stats):
-        """Removes all lines that are full."""
-        lines_removed = 0
+    def get_full_lines(self):
+        """Returns a list of indexes of full lines."""
         lines_cleared = []
         for y in reversed(range(self.settings.board_height)):
             if self.line_is_full(y):
-                self.clear_line(y)
                 lines_cleared.append(y)
-                lines_removed += 1
-        if lines_removed > 0:
-            game_stats.increment_lines(lines_removed)
-            self.fix_board()
-            self.fix_block_positions()
-            return True
+        return lines_cleared
+
+
+    def clear_full_lines(self, full_lines, game_stats):
+        """Removes all lines that are full."""
+        for line in full_lines:
+            self.clear_line(line)
+        game_stats.increment_lines(len(full_lines))
+        self.fix_board()
+        self.fix_block_positions()
 
 
     def clear_line(self, line_index):
@@ -141,6 +151,12 @@ class Board():
             if not i:
                 return False
         return True
+
+
+    def fill_row_with_wall(self, row):
+        """Fills the row specified with a wall."""
+        for x in range(self.width):
+            self.board[row][x] = Block(self.screen, self.settings.wall_block, (x * 40) + 80, row * 40)
 
 
     def blitme(self):

@@ -7,10 +7,12 @@ import pygame
 class Shape():
     """A class representing a single Tetris shape."""
 
-    def __init__(self, screen, settings, utils, x=200, y=0):
+    def __init__(self, screen, settings, sounds, effect_channel, utils, x=200, y=0):
         """Initializes a single random Tetris shape."""
         self.screen = screen
         self.settings = settings
+        self.sounds = sounds
+        self.effect_channel = effect_channel
         self.utils = utils
         self.x = x
         self.y = y
@@ -18,7 +20,9 @@ class Shape():
         self.moving_right = False
         self.moving_left = False
         self.clockwise = True
-
+        self.moving_fast = False
+        self.first_press_down_key = True
+        self.moving_fast_start_index = 1
 
 
     def initialize_shape(self):
@@ -50,7 +54,7 @@ class Shape():
             row = []
             for x in range(len(shape[y])):
                 if shape[y][x]:
-                    row.append(Block(self.screen, self.settings, image, self.x + (x * 40), self.y + (y * 40)))
+                    row.append(Block(self.screen, image, self.x + (x * 40), self.y + (y * 40)))
             if row:
                 new_shape.append(row)
         return new_shape
@@ -68,6 +72,7 @@ class Shape():
         shape = self.build_shape(arr_shape, self.image)
 
         if not board.check_collision(shape):
+            self.effect_channel.play(self.sounds.rotate)
             self.shape = shape
             self.arr_shape = arr_shape
             if self.name == 'S' or self.name == 'Z':
@@ -84,6 +89,8 @@ class Shape():
         current_time = get_ticks()
         if current_time - self.time_of_last_fall > self.fall_frequency:
             if board.has_landed(self.shape):
+                if self.moving_fast:
+                    game_stats.add_score((self.get_lowest_y_value() // 40) - self.moving_fast_start_index)
                 return True
             for row in self.shape:
                 for block in row:
@@ -94,6 +101,7 @@ class Shape():
         if self.moving_left and board.can_move_to_left(self.shape):
             self.move_shape_left(current_time)
         if self.moving_right and board.can_move_to_right(self.shape):
+
             self.move_shape_right(current_time)
 
         self.fall_frequency = game_stats.fall_frequency
@@ -102,6 +110,7 @@ class Shape():
     def move_shape_right(self, current_time):
         """Move shape to the left."""
         if current_time - self.time_of_last_sidestep > self.side_frequency:
+            self.effect_channel.play(self.sounds.move_sideways)
             for row in self.shape:
                 for block in row:
                     block.rect.x += 40
@@ -112,6 +121,7 @@ class Shape():
     def move_shape_left(self, current_time):
         """Move shape to the left."""
         if current_time - self.time_of_last_sidestep > self.side_frequency:
+            self.effect_channel.play(self.sounds.move_sideways)
             for row in self.shape:
                 for block in row:
                     block.rect.x -= 40
@@ -124,6 +134,30 @@ class Shape():
         self.y = y
         self.shape = self.build_shape(self.arr_shape, self.image)
         self.time_of_last_fall = get_ticks()
+
+
+    def start_moving_fast(self):
+        """Sets the moving fast flag for calculating score."""
+        if self.first_press_down_key:
+            self.moving_fast = True
+            self.moving_fast_start_index = self.get_lowest_y_value() // 40
+            self.first_press_down_key = False
+
+
+    def stop_moving_fast(self):
+        """Sets the moving fast flag for calculating score."""
+        self.moving_fast = False
+
+
+    def get_lowest_y_value(self):
+        """Returns the lowest y value of the shapes blocks."""
+        lowest = 720
+        for row in self.shape:
+            for block in row:
+                if block.rect.y < lowest:
+                    lowest = block.rect.y
+        return lowest
+
 
 
     def blitme(self):
