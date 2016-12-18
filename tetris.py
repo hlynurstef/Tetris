@@ -207,32 +207,37 @@ class Tetris():
         else:
             self.sounds.clear_line.play()
 
-
-        for x in range(3):
+        blink_on = True
+        blink_time = 250
+        blinks = 0
+        time_of_last_blink = get_ticks()
+        while blinks < 6:
             self.clock.tick(self.settings.fps)
+            self.display_fps()
+            self.scoreboard.blitme()
+            self.next_shape.blitme()
+            self.board.blitme()
+            current_time = get_ticks()
+            if current_time - time_of_last_blink > blink_time:
+                blink_on = not blink_on
+                time_of_last_blink = current_time
+                blinks += 1
+            if blink_on:
+                for line in line_indexes:
+                    pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
+            pygame.display.update()
+
+        wait = get_ticks() + blink_time
+        while current_time < wait:
+            current_time = get_ticks()
+            self.clock.tick(self.settings.fps)
+            self.display_fps()
+            self.scoreboard.blitme()
+            self.next_shape.blitme()
             self.board.blitme()
             for line in line_indexes:
-                pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
-            self.scoreboard.blitme()
-            self.next_shape.blitme()
+                pygame.draw.rect(self.screen, self.settings.flesh_color, pygame.Rect(80, line * 40, 400, 40))
             pygame.display.update()
-            pygame.time.delay(150)
-
-            self.board.blitme()
-            self.scoreboard.blitme()
-            self.next_shape.blitme()
-            pygame.display.update()
-            pygame.time.delay(150)
-
-        self.clock.tick(self.settings.fps)
-        for line in line_indexes:
-            pygame.draw.rect(self.screen, self.settings.flesh_color, pygame.Rect(80, line * 40, 400, 40))
-        self.scoreboard.blitme()
-        self.next_shape.blitme()
-        pygame.display.update()
-        pygame.time.delay(150)
-
-        pygame.time.delay(150)
         self.sounds.board_land_after_clear.play()
 
 
