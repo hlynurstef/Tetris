@@ -7,12 +7,11 @@ import pygame
 class Shape():
     """A class representing a single Tetris shape."""
 
-    def __init__(self, screen, settings, sounds, effect_channel, utils, x=200, y=0):
+    def __init__(self, screen, settings, sounds, utils, x=200, y=0):
         """Initializes a single random Tetris shape."""
         self.screen = screen
         self.settings = settings
         self.sounds = sounds
-        self.effect_channel = effect_channel
         self.utils = utils
         self.x = x
         self.y = y
@@ -72,7 +71,7 @@ class Shape():
         shape = self.build_shape(arr_shape, self.image)
 
         if not board.check_collision(shape):
-            self.effect_channel.play(self.sounds.rotate)
+            self.sounds.rotate.play()
             self.shape = shape
             self.arr_shape = arr_shape
             if self.name == 'S' or self.name == 'Z':
@@ -110,7 +109,7 @@ class Shape():
     def move_shape_right(self, current_time):
         """Move shape to the left."""
         if current_time - self.time_of_last_sidestep > self.side_frequency:
-            self.effect_channel.play(self.sounds.move_sideways)
+            self.sounds.move_sideways.play()
             for row in self.shape:
                 for block in row:
                     block.rect.x += 40
@@ -121,7 +120,7 @@ class Shape():
     def move_shape_left(self, current_time):
         """Move shape to the left."""
         if current_time - self.time_of_last_sidestep > self.side_frequency:
-            self.effect_channel.play(self.sounds.move_sideways)
+            self.sounds.move_sideways.play()
             for row in self.shape:
                 for block in row:
                     block.rect.x -= 40
