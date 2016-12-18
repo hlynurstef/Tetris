@@ -39,10 +39,9 @@ class Scoreboard():
         self.prep_lines()
 
 
-    def blitme(self, new_scoreboard):
+    def blitme(self):
         """Draw the scoreboard to the screen."""
-        if new_scoreboard:
-            self.prep_scoreboard()
+        self.prep_scoreboard()
         self.score_image.blitme()
         self.level_image.blitme()
         self.lines_image.blitme()

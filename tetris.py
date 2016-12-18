@@ -114,13 +114,17 @@ class Tetris():
         """Update everything on screen and then draw the screen."""
         self.draw_board()
         self.landed = self.current_shape.update(self.board, self.game_stats)
-        lines_were_cleared = False
+
         if self.landed:
             self.board.add_to_board(self.current_shape)
-            lines_were_cleared = self.board.clear_full_lines(self.game_stats)
+            full_lines = self.board.get_full_lines()
+            if full_lines:
+                self.display_cleared_lines(full_lines)
+                self.board.clear_full_lines(full_lines, self.game_stats)
         else:
             self.current_shape.blitme()
-        self.scoreboard.blitme(lines_were_cleared)
+
+        self.scoreboard.blitme()
         self.next_shape.blitme()
         self.board.blitme()
 
@@ -167,6 +171,7 @@ class Tetris():
         time_of_last_draw = get_ticks()
         draw_time = 50
         while current_row >= 0:
+            self.clock.tick(self.settings.fps)
             current_time = get_ticks()
             if current_time - time_of_last_draw > draw_time:
                 self.board.fill_row_with_wall(current_row)
@@ -177,6 +182,35 @@ class Tetris():
                 self.display_fps()
             pygame.display.update()
         pygame.time.delay(400)
+
+
+    def display_cleared_lines(self, line_indexes):
+        """Makes the cleared lines blink."""
+        if len(line_indexes) == 4:
+            self.effect_channel.play(self.sounds.tetris_clear)
+        else:
+            self.effect_channel.play(self.sounds.clear_line)
+        self.board.blitme()
+        for line in line_indexes:
+            pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
+        pygame.display.update()
+        pygame.time.delay(150)
+
+        for x in range(3):
+            self.clock.tick(self.settings.fps)
+            self.board.blitme()
+            pygame.display.update()
+            pygame.time.delay(150)
+
+            self.clock.tick(self.settings.fps)
+            for line in line_indexes:
+                pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
+            pygame.display.update()
+            pygame.time.delay(150)
+
+        pygame.time.delay(150)
+        self.effect_channel.play(self.sounds.board_land_after_clear)
+
 
     def update_game_over_screen():
         print("wooohoo")

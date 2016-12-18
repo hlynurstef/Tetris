@@ -1,4 +1,7 @@
 from block import Block
+from pygame import draw
+from pygame import Rect
+import pygame
 
 class Board():
     """A class representing the playing board."""
@@ -118,20 +121,22 @@ class Board():
                     self.board[y][x].rect.y = self.y + (y * 40)
 
 
-    def clear_full_lines(self, game_stats):
-        """Removes all lines that are full."""
-        lines_removed = 0
+    def get_full_lines(self):
+        """Returns a list of indexes of full lines."""
         lines_cleared = []
         for y in reversed(range(self.settings.board_height)):
             if self.line_is_full(y):
-                self.clear_line(y)
                 lines_cleared.append(y)
-                lines_removed += 1
-        if lines_removed > 0:
-            game_stats.increment_lines(lines_removed)
-            self.fix_board()
-            self.fix_block_positions()
-            return True
+        return lines_cleared
+
+
+    def clear_full_lines(self, full_lines, game_stats):
+        """Removes all lines that are full."""
+        for line in full_lines:
+            self.clear_line(line)
+        game_stats.increment_lines(len(full_lines))
+        self.fix_board()
+        self.fix_block_positions()
 
 
     def clear_line(self, line_index):
