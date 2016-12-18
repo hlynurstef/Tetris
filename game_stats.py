@@ -34,7 +34,7 @@ class GameStats():
 
     def key_down_fall_frequency(self):
         """Sets fall frequency to 100 when player presses down key."""
-        self.fall_frequency = 100
+        self.fall_frequency = 50
 
 
     def set_level_fall_frequency(self):
