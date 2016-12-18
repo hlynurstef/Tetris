@@ -289,6 +289,7 @@ class Tetris():
             self.current_shape.stop_moving_fast()
 
     def pause_music(self):
+        """Pauses music but not effects."""
         if self.music_pause:
             self.music_channel.unpause()
         else:

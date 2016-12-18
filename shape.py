@@ -140,6 +140,7 @@ class Shape():
 
 
     def set_position(self, x, y):
+        """Sets x and y for current shape and rebuilds it."""
         self.x = x
         self.y = y
         self.shape = self.build_shape(self.arr_shape, self.image)
