@@ -1,13 +1,14 @@
 class GameStats():
     """A class to hold all game related stats."""
 
-    def __init__(self):
+    def __init__(self, sounds):
         """Initialize game settings."""
         self.reset_game_stats()
         self.speed = [800, 717, 617, 550, 467, 383, 300, 217, 133, 100, 83, 83,
                       83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33,
                       33, 33, 33, 33, 17]
         self.base_line_values = {1: 40, 2: 100, 3: 300, 4: 1200}
+        self.sounds = sounds
 
 
     def reset_game_stats(self):
@@ -28,6 +29,7 @@ class GameStats():
             if not self.lines % 10:
                 self.level += 1
                 self.set_level_fall_frequency()
+                self.sounds.level_up.play()
 
         self.score += self.base_line_values[num_lines] * (self.level + 1)
 

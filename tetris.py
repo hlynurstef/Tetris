@@ -38,8 +38,8 @@ class Tetris():
         # Game objects.
         self.settings = Settings()
         self.utils = Utilities(self.settings)
-        self.game_stats = GameStats()
         self.sounds = Sounds()
+        self.game_stats = GameStats(self.sounds)
         self.board = Board(self.screen, self.settings, self.sounds, self.effect_channel)
         self.scoreboard = Scoreboard(self.screen, self.settings, self.game_stats)
 
