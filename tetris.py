@@ -50,6 +50,7 @@ class Tetris():
 
         # Game flags.
         self.title_screen = True
+        self.controls_screen = True
         self.select_music_screen = True
         self.game_over = False
         self.show_fps = False
@@ -67,6 +68,7 @@ class Tetris():
         """Main function for Tetris."""
 
         self.run_title_screen()
+        self.run_controls_screen()
         self.run_select_music()
         while True:
             self.run_new_game()
@@ -83,6 +85,14 @@ class Tetris():
             self.display_fps()
             pygame.display.update()
 
+    def run_controls_screen(self):
+        while self.controls_screen:
+            self.clock.tick(self.settings.fps)
+            self.screen.blit(self.settings.controls_screen, (0,0))
+            self.check_events_control_screen()
+            self.display_fps()
+            pygame.display.update()
+
 
     def run_select_music(self):
         """Run option screen for selecting game type and music."""
@@ -94,7 +104,6 @@ class Tetris():
             self.display_fps()
             self.music_selection.blitme()
             pygame.display.update()
-
 
 
     def run_new_game(self):
@@ -318,7 +327,22 @@ class Tetris():
                     self.quit_game()
                 if event.key == pygame.K_f:
                     self.show_fps = not self.show_fps
-                self.title_screen = False
+                if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    self.title_screen = False
+
+
+    def check_events_control_screen(self):
+        """Check for events on controls screen and respond to them."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.quit_game()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.quit_game()
+                if event.key == pygame.K_f:
+                    self.show_fps = not self.show_fps
+                if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    self.controls_screen = False
 
     def check_events_select_music(self):
         """Check for events on game type and music screen and respond to them."""

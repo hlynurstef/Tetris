@@ -10,8 +10,8 @@ class MusicSelection():
         self.sounds = sounds
         self.music_channel = music_channel
         self.music_pos = (0,0)
-        self.text_blink_frequency = 500
-        self.text_on = True
+        self.text_blink_frequency = 350
+        self.text_on = False
         self.music_selection = {(0,0): [self.sounds.a_type_music, 'A-TYPE'],
                                 (1,0): [self.sounds.b_type_music, 'B-TYPE'],
                                 (0,1): [self.sounds.c_type_music, 'C-TYPE'],

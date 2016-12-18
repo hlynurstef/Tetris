@@ -44,6 +44,7 @@ class Settings():
         self.wall_block = pygame.image.load('images/shapes/wall_block.png').convert()
         self.pause = pygame.image.load('images/pause.png').convert()
         self.type_and_music = pygame.image.load('images/type_and_music.png').convert()
+        self.controls_screen = pygame.image.load('images/controls_screen.png').convert()
 
         # Font
         self.font = 'fonts/game_boy.ttf'
