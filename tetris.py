@@ -117,11 +117,11 @@ class Tetris():
 
         if self.landed:
             self.board.add_to_board(self.current_shape)
+            self.game_stats.set_level_fall_frequency()
             full_lines = self.board.get_full_lines()
             if full_lines:
                 self.display_full_lines(full_lines)
                 self.board.clear_full_lines(full_lines, self.game_stats)
-
         else:
             self.current_shape.blitme()
 
@@ -256,7 +256,6 @@ class Tetris():
         if event.key == pygame.K_DOWN:
             self.game_stats.key_down_fall_frequency()
             self.current_shape.start_moving_fast()
-            print('moving fast')
         if event.key == pygame.K_f:
             self.show_fps = not self.show_fps
 
