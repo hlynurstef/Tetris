@@ -121,6 +121,7 @@ class Tetris():
             if full_lines:
                 self.display_full_lines(full_lines)
                 self.board.clear_full_lines(full_lines, self.game_stats)
+
         else:
             self.current_shape.blitme()
 
@@ -198,11 +199,13 @@ class Tetris():
             for line in line_indexes:
                 pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
             self.scoreboard.blitme()
+            self.next_shape.blitme()
             pygame.display.update()
             pygame.time.delay(150)
 
             self.board.blitme()
             self.scoreboard.blitme()
+            self.next_shape.blitme()
             pygame.display.update()
             pygame.time.delay(150)
 
@@ -210,10 +213,11 @@ class Tetris():
         for line in line_indexes:
             pygame.draw.rect(self.screen, self.settings.flesh_color, pygame.Rect(80, line * 40, 400, 40))
         self.scoreboard.blitme()
+        self.next_shape.blitme()
         pygame.display.update()
         pygame.time.delay(150)
 
-        pygame.time.delay(200)
+        pygame.time.delay(150)
         self.effect_channel.play(self.sounds.board_land_after_clear)
 
 
@@ -252,6 +256,7 @@ class Tetris():
         if event.key == pygame.K_DOWN:
             self.game_stats.key_down_fall_frequency()
             self.current_shape.start_moving_fast()
+            print('moving fast')
         if event.key == pygame.K_f:
             self.show_fps = not self.show_fps
 
