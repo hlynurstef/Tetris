@@ -42,6 +42,7 @@ class Settings():
         self.T_block = pygame.image.load('images/shapes/T.png').convert()
         self.I_block = pygame.image.load('images/shapes/I.png').convert()
         self.wall_block = pygame.image.load('images/shapes/wall_block.png').convert()
+        self.pause = pygame.image.load('images/pause.png').convert()
 
         # Font
         self.font = 'fonts/game_boy.ttf'
