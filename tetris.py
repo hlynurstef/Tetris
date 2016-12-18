@@ -165,7 +165,7 @@ class Tetris():
         self.board.blitme()
 
         time_of_last_draw = get_ticks()
-        draw_time = 75
+        draw_time = 50
         while current_row >= 0:
             current_time = get_ticks()
             if current_time - time_of_last_draw > draw_time:
@@ -176,7 +176,7 @@ class Tetris():
             if self.show_fps:
                 self.display_fps()
             pygame.display.update()
-        pygame.time.delay(75)
+        pygame.time.delay(400)
 
     def update_game_over_screen():
         print("wooohoo")
