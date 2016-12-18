@@ -273,6 +273,7 @@ class Tetris():
             self.quit_game()
         if event.key == pygame.K_SPACE:
             self.current_shape.drop = True
+            self.current_shape.start_moving_fast()
         if event.key == pygame.K_LEFT:
             self.current_shape.moving_left = True
         if event.key == pygame.K_RIGHT:
