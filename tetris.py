@@ -24,7 +24,6 @@ class Tetris():
 
         # Sound Channels.
         self.music_channel = pygame.mixer.Channel(1)
-        self.effect_channel = pygame.mixer.Channel(2)
 
 
         self.screen = pygame.display.set_mode((800, 720))
@@ -40,12 +39,12 @@ class Tetris():
         self.utils = Utilities(self.settings)
         self.game_stats = GameStats()
         self.sounds = Sounds()
-        self.board = Board(self.screen, self.settings, self.sounds, self.effect_channel)
+        self.board = Board(self.screen, self.settings, self.sounds)
         self.scoreboard = Scoreboard(self.screen, self.settings, self.game_stats)
 
         # Tetris shapes.
-        self.current_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils)
-        self.next_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils, 600, 520)
+        self.current_shape = Shape(self.screen, self.settings, self.sounds, self.utils)
+        self.next_shape = Shape(self.screen, self.settings, self.sounds, self.utils, 600, 520)
 
         # Game flags.
         self.title_screen = True
@@ -92,7 +91,7 @@ class Tetris():
             if self.landed:
                 self.next_shape.set_position(200,0)
                 self.current_shape = self.next_shape
-                self.next_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils, 600, 520)
+                self.next_shape = Shape(self.screen, self.settings, self.sounds, self.utils, 600, 520)
                 self.game_over = self.board.check_collision(self.current_shape.shape)
                 if self.game_over:
                     self.draw_game_over_wall()
@@ -100,7 +99,7 @@ class Tetris():
 
     def run_game_over(self):
         """Run game over sreen."""
-        self.effect_channel.play(self.sounds.game_over)
+        self.sounds.game_over.play()
         while self.game_over:
             self.clock.tick(self.settings.fps)
             self.check_events_game_over()
@@ -163,7 +162,7 @@ class Tetris():
     def draw_game_over_wall(self):
         """Draw the game over wall."""
         self.music_channel.stop()
-        self.effect_channel.play(self.sounds.game_over_wall)
+        self.sounds.game_over_wall.play()
 
         self.board.fill_row_with_wall(self.settings.board_height-1)
         current_row = self.settings.board_height-2
@@ -188,9 +187,9 @@ class Tetris():
     def display_full_lines(self, line_indexes):
         """Makes the cleared lines blink."""
         if len(line_indexes) == 4:
-            self.effect_channel.play(self.sounds.tetris_clear)
+            self.sounds.tetris_clear.play()
         else:
-            self.effect_channel.play(self.sounds.clear_line)
+            self.sounds.clear_line.play()
 
 
         for x in range(3):
@@ -218,7 +217,7 @@ class Tetris():
         pygame.time.delay(150)
 
         pygame.time.delay(150)
-        self.effect_channel.play(self.sounds.board_land_after_clear)
+        self.sounds.board_land_after_clear.play()
 
 
     def update_game_over_screen():

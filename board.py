@@ -6,12 +6,11 @@ import pygame
 class Board():
     """A class representing the playing board."""
 
-    def __init__(self, screen, settings, sounds, effect_channel):
+    def __init__(self, screen, settings, sounds):
         """Initialize the board."""
         self.screen = screen
         self.settings = settings
         self.sounds = sounds
-        self.effect_channel = effect_channel
         self.height = self.settings.board_height
         self.width = self.settings.board_width
         self.initialize_board()
@@ -54,7 +53,7 @@ class Board():
                 x = self.get_x_index(block)
                 y = self.get_y_index(block) + 1
                 if y >= self.settings.board_height or self.board[y][x]:
-                    self.effect_channel.play(self.sounds.shape_land)
+                    self.sounds.shape_land.play()
                     return True
         return False
 
