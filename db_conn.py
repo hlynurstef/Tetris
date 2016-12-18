@@ -26,7 +26,7 @@ class DBConnection():
         self.c.execute('''SELECT name, score
                         FROM high_score
                         ORDER BY score DESC''')
-        print(self.c.fetchmany(10))
+        return self.c.fetchmany(10)
 
     def get_all_scores(self):
         self.c.execute('''SELECT name, score

@@ -1,5 +1,7 @@
 import pygame
 from pygame.time import get_ticks
+from pygame.font import Font
+from pygame.rect import Rect
 import ctypes
 import platform
 import sys
@@ -53,6 +55,7 @@ class Tetris():
         self.controls_screen = True
         self.select_music_screen = True
         self.game_over = False
+        self.high_score_screen = True
         self.show_fps = False
         self.pause = False
         self.music_pause = False
@@ -73,6 +76,8 @@ class Tetris():
         while True:
             self.run_new_game()
             self.run_game_over()
+            self.run_high_score_screen()
+            self.music_channel.stop()
 
 
     def run_title_screen(self):
@@ -141,8 +146,28 @@ class Tetris():
             self.check_events_game_over()
             self.draw_game_over()
 
+
+
+
+    def run_high_score_screen(self):
+        """Show highest scores."""
+        self.music_channel.stop()
+        self.music_channel.play(self.sounds.high_score_music)
         self.db.add_score('player', self.game_stats.score)
-        self.db.get_top_ten()
+        top_ten = self.db.get_top_ten()
+        while self.high_score_screen:
+            self.clock.tick(self.settings.fps)
+            self.check_events_high_score_screen()
+            self.screen.blit(self.settings.high_scores, (0,0))
+            for row in range(len(top_ten)):
+                font = Font(self.settings.font, self.settings.font_size)
+                image = font.render('player:' + str(top_ten[row][1]), False, self.settings.black).convert_alpha()
+                rect = image.get_rect()
+                rect.x = 120
+                rect.y = row * 40 + 165
+                self.screen.blit(image, rect)
+            self.display_fps()
+            pygame.display.update()
 
 
     def update_screen(self):
@@ -380,6 +405,18 @@ class Tetris():
                 if event.key == pygame.K_f:
                     self.show_fps = not self.show_fps
 
+    def check_events_high_score_screen(self):
+        """Check for events on high score screen and respond to them."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.quit_game()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.high_score_screen = False
+                if event.key == pygame.K_ESCAPE:
+                    self.quit_game()
+                if event.key == pygame.K_f:
+                    self.show_fps = not self.show_fps
 
     def quit_game(self):
         """Quits pygame and python."""
