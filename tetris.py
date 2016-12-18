@@ -37,8 +37,8 @@ class Tetris():
         # Game objects.
         self.settings = Settings()
         self.utils = Utilities(self.settings)
-        self.game_stats = GameStats()
         self.sounds = Sounds()
+        self.game_stats = GameStats(self.sounds)
         self.board = Board(self.screen, self.settings, self.sounds)
         self.scoreboard = Scoreboard(self.screen, self.settings, self.game_stats)
 
@@ -51,6 +51,7 @@ class Tetris():
         self.game_over = False
         self.show_fps = False
         self.pause = False
+        self.music_pause = False
 
         # Make a clock object to set fps limit.
         self.clock = pygame.time.Clock()
@@ -226,10 +227,6 @@ class Tetris():
         self.sounds.board_land_after_clear.play()
 
 
-    def update_game_over_screen():
-        print("wooohoo")
-
-
     def draw_game_over(self):
         """Drawing the game over screen."""
         self.screen.blit(self.settings.game_over, (80,0))
@@ -276,6 +273,8 @@ class Tetris():
         if event.key == pygame.K_RETURN:
             self.pause = not self.pause
             self.sounds.pause.play()
+        if event.key == pygame.K_m:
+            self.pause_music()
 
 
     def check_keyup_events(self, event):
@@ -287,6 +286,12 @@ class Tetris():
             self.game_stats.set_level_fall_frequency()
             self.current_shape.stop_moving_fast()
 
+    def pause_music(self):
+        if self.music_pause:
+            self.music_channel.unpause()
+        else:
+            self.music_channel.pause()
+        self.music_pause = not self.music_pause
 
     def check_events_title_screen(self):
         """Check for events on title screen and respond to them."""
