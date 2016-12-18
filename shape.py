@@ -7,10 +7,12 @@ import pygame
 class Shape():
     """A class representing a single Tetris shape."""
 
-    def __init__(self, screen, settings, utils, x=200, y=0):
+    def __init__(self, screen, settings, sounds, effect_channel, utils, x=200, y=0):
         """Initializes a single random Tetris shape."""
         self.screen = screen
         self.settings = settings
+        self.sounds = sounds
+        self.effect_channel = effect_channel
         self.utils = utils
         self.x = x
         self.y = y
@@ -50,7 +52,7 @@ class Shape():
             row = []
             for x in range(len(shape[y])):
                 if shape[y][x]:
-                    row.append(Block(self.screen, self.settings, image, self.x + (x * 40), self.y + (y * 40)))
+                    row.append(Block(self.screen, image, self.x + (x * 40), self.y + (y * 40)))
             if row:
                 new_shape.append(row)
         return new_shape
@@ -68,6 +70,7 @@ class Shape():
         shape = self.build_shape(arr_shape, self.image)
 
         if not board.check_collision(shape):
+            self.effect_channel.play(self.sounds.rotate)
             self.shape = shape
             self.arr_shape = arr_shape
             if self.name == 'S' or self.name == 'Z':
@@ -94,6 +97,7 @@ class Shape():
         if self.moving_left and board.can_move_to_left(self.shape):
             self.move_shape_left(current_time)
         if self.moving_right and board.can_move_to_right(self.shape):
+
             self.move_shape_right(current_time)
 
         self.fall_frequency = game_stats.fall_frequency
@@ -102,6 +106,7 @@ class Shape():
     def move_shape_right(self, current_time):
         """Move shape to the left."""
         if current_time - self.time_of_last_sidestep > self.side_frequency:
+            self.effect_channel.play(self.sounds.move_sideways)
             for row in self.shape:
                 for block in row:
                     block.rect.x += 40
@@ -112,6 +117,7 @@ class Shape():
     def move_shape_left(self, current_time):
         """Move shape to the left."""
         if current_time - self.time_of_last_sidestep > self.side_frequency:
+            self.effect_channel.play(self.sounds.move_sideways)
             for row in self.shape:
                 for block in row:
                     block.rect.x -= 40

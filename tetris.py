@@ -1,4 +1,5 @@
 import pygame
+from pygame.time import get_ticks
 import ctypes
 import platform
 import sys
@@ -43,8 +44,8 @@ class Tetris():
         self.scoreboard = Scoreboard(self.screen, self.settings, self.game_stats)
 
         # Tetris shapes.
-        self.current_shape = Shape(self.screen, self.settings, self.utils)
-        self.next_shape = Shape(self.screen, self.settings, self.utils, 600, 520)
+        self.current_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils)
+        self.next_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils, 600, 520)
 
         # Game flags.
         self.title_screen = True
@@ -91,21 +92,20 @@ class Tetris():
             if self.landed:
                 self.next_shape.set_position(200,0)
                 self.current_shape = self.next_shape
-                self.next_shape = Shape(self.screen, self.settings, self.utils, 600, 520)
+                self.next_shape = Shape(self.screen, self.settings, self.sounds, self.effect_channel, self.utils, 600, 520)
                 self.game_over = self.board.check_collision(self.current_shape.shape)
+                if self.game_over:
+                    self.draw_game_over_wall()
 
 
     def run_game_over(self):
         """Run game over sreen."""
-        self.music_channel.stop()
-        self.music_channel.play(self.sounds.high_score_music, -1)
+        self.effect_channel.play(self.sounds.game_over)
         while self.game_over:
             self.clock.tick(self.settings.fps)
-            self.draw_game_over()
             self.check_events_game_over()
-            if self.show_fps:
-                self.display_fps()
-            pygame.display.update()
+            self.draw_game_over()
+
         self.db.add_score('player', self.game_stats.score)
         self.db.get_top_ten()
 
@@ -155,13 +155,39 @@ class Tetris():
         self.screen.blit(self.settings.scoreboard, (525, 0))
 
 
+    def draw_game_over_wall(self):
+        """Draw the game over wall."""
+        self.music_channel.stop()
+        self.effect_channel.play(self.sounds.game_over_wall)
+
+        self.board.fill_row_with_wall(self.settings.board_height-1)
+        current_row = self.settings.board_height-2
+        self.board.blitme()
+
+        time_of_last_draw = get_ticks()
+        draw_time = 75
+        while current_row >= 0:
+            current_time = get_ticks()
+            if current_time - time_of_last_draw > draw_time:
+                self.board.fill_row_with_wall(current_row)
+                current_row -= 1
+                self.board.blitme()
+                time_of_last_draw = current_time
+            if self.show_fps:
+                self.display_fps()
+            pygame.display.update()
+        pygame.time.delay(75)
+
     def update_game_over_screen():
         print("wooohoo")
+
 
     def draw_game_over(self):
         """Drawing the game over screen."""
         self.screen.blit(self.settings.game_over, (80,0))
-
+        if self.show_fps:
+            self.display_fps()
+        pygame.display.update()
 
 
     def check_events(self):
@@ -180,13 +206,10 @@ class Tetris():
             self.quit_game()
         if event.key == pygame.K_LEFT:
             self.current_shape.moving_left = True
-            self.effect_channel.play(self.sounds.move_sideways)
         if event.key == pygame.K_RIGHT:
             self.current_shape.moving_right = True
-            self.effect_channel.play(self.sounds.move_sideways)
         if event.key == pygame.K_UP:
             self.current_shape.rotate(self.board)
-            self.effect_channel.play(self.sounds.rotate)
         if event.key == pygame.K_DOWN:
             self.game_stats.key_down_fall_frequency()
         if event.key == pygame.K_f:
@@ -214,6 +237,7 @@ class Tetris():
                     self.quit_game()
                 if event.key == pygame.K_f:
                     self.show_fps = not self.show_fps
+
 
     def check_events_game_over(self):
         """Check for events on game over screen and respond to them."""

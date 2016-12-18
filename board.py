@@ -1,3 +1,5 @@
+from block import Block
+
 class Board():
     """A class representing the playing board."""
 
@@ -144,6 +146,12 @@ class Board():
             if not i:
                 return False
         return True
+
+
+    def fill_row_with_wall(self, row):
+        """Fills the row specified with a wall."""
+        for x in range(self.width):
+            self.board[row][x] = Block(self.screen, self.settings.wall_block, (x * 40) + 80, row * 40)
 
 
     def blitme(self):
