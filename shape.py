@@ -20,7 +20,9 @@ class Shape():
         self.moving_right = False
         self.moving_left = False
         self.clockwise = True
-
+        self.moving_fast = False
+        self.first_press_down_key = True
+        self.moving_fast_start_index = 1
 
 
     def initialize_shape(self):
@@ -87,6 +89,8 @@ class Shape():
         current_time = get_ticks()
         if current_time - self.time_of_last_fall > self.fall_frequency:
             if board.has_landed(self.shape):
+                if self.moving_fast:
+                    game_stats.add_score((self.get_lowest_y_value() // 40) - self.moving_fast_start_index)
                 return True
             for row in self.shape:
                 for block in row:
@@ -130,6 +134,30 @@ class Shape():
         self.y = y
         self.shape = self.build_shape(self.arr_shape, self.image)
         self.time_of_last_fall = get_ticks()
+
+
+    def start_moving_fast(self):
+        """Sets the moving fast flag for calculating score."""
+        if self.first_press_down_key:
+            self.moving_fast = True
+            self.moving_fast_start_index = self.get_lowest_y_value() // 40
+            self.first_press_down_key = False
+
+
+    def stop_moving_fast(self):
+        """Sets the moving fast flag for calculating score."""
+        self.moving_fast = False
+
+
+    def get_lowest_y_value(self):
+        """Returns the lowest y value of the shapes blocks."""
+        lowest = 720
+        for row in self.shape:
+            for block in row:
+                if block.rect.y < lowest:
+                    lowest = block.rect.y
+        return lowest
+
 
 
     def blitme(self):
