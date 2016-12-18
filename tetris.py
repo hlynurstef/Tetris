@@ -3,6 +3,7 @@ from pygame.time import get_ticks
 import ctypes
 import platform
 import sys
+from music_selection import MusicSelection
 from game_settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
@@ -41,6 +42,7 @@ class Tetris():
         self.game_stats = GameStats(self.sounds)
         self.board = Board(self.screen, self.settings, self.sounds)
         self.scoreboard = Scoreboard(self.screen, self.settings, self.game_stats)
+        self.music_selection = MusicSelection(self.screen, self.settings, self.sounds, self.music_channel)
 
         # Tetris shapes.
         self.current_shape = Shape(self.screen, self.settings, self.sounds, self.utils)
@@ -48,6 +50,7 @@ class Tetris():
 
         # Game flags.
         self.title_screen = True
+        self.select_music_screen = True
         self.game_over = False
         self.show_fps = False
         self.pause = False
@@ -64,6 +67,7 @@ class Tetris():
         """Main function for Tetris."""
 
         self.run_title_screen()
+        self.run_select_music()
         while True:
             self.run_new_game()
             self.run_game_over()
@@ -74,13 +78,29 @@ class Tetris():
         self.music_channel.play(self.sounds.title_music, -1)
         while self.title_screen:
             self.clock.tick(self.settings.fps)
-            self.update_title_screen()
+            self.screen.blit(self.settings.title_screen, (0,0))
+            self.check_events_title_screen()
+            self.display_fps()
+            pygame.display.update()
+
+
+    def run_select_music(self):
+        """Run option screen for selecting game type and music."""
+        self.music_selection.play_music()
+        while self.select_music_screen:
+            self.clock.tick(self.settings.fps)
+            self.screen.blit(self.settings.type_and_music, (0,0))
+            self.check_events_select_music()
+            self.display_fps()
+            self.music_selection.blitme()
+            pygame.display.update()
+
 
 
     def run_new_game(self):
         """Run gameplay."""
-        self.music_channel.stop()
-        self.music_channel.play(self.sounds.a_type_music, -1)
+        if not self.music_channel.get_busy():
+            self.music_selection.play_music()
         self.board.clear_board()
         self.game_stats.reset_game_stats()
         self.scoreboard.prep_scoreboard()
@@ -134,26 +154,16 @@ class Tetris():
         self.scoreboard.blitme()
         self.next_shape.blitme()
         self.board.blitme()
-
-        if self.show_fps:
-            self.display_fps()
-        pygame.display.update()
-
-
-    def update_title_screen(self):
-        """Update everything on the title screen, then draw it."""
-        self.screen.blit(self.settings.title_screen, (0,0))
-        self.check_events_title_screen()
-        if self.show_fps:
-            self.display_fps()
+        self.display_fps()
         pygame.display.update()
 
 
     def display_fps(self):
         """Display fps on screen."""
-        pygame.draw.rect(self.screen, self.settings.black, pygame.Rect(0, 0, 80, 40))
-        fps_text = Text(self.screen, self.settings, str(int(self.clock.get_fps())), self.settings.white, 80, 0)
-        fps_text.blitme()
+        if self.show_fps:
+            pygame.draw.rect(self.screen, self.settings.black, pygame.Rect(0, 0, 80, 40))
+            fps_text = Text(self.screen, self.settings, str(int(self.clock.get_fps())), self.settings.white, 80, 0)
+            fps_text.blitme()
 
 
     def draw_board(self):
@@ -185,8 +195,7 @@ class Tetris():
                 current_row -= 1
                 self.board.blitme()
                 time_of_last_draw = current_time
-            if self.show_fps:
-                self.display_fps()
+            self.display_fps()
             pygame.display.update()
         pygame.time.delay(400)
 
@@ -198,40 +207,44 @@ class Tetris():
         else:
             self.sounds.clear_line.play()
 
-
-        for x in range(3):
+        blink_on = True
+        blink_time = 250
+        blinks = 0
+        time_of_last_blink = get_ticks()
+        while blinks < 6:
             self.clock.tick(self.settings.fps)
+            self.display_fps()
+            self.scoreboard.blitme()
+            self.next_shape.blitme()
+            self.board.blitme()
+            current_time = get_ticks()
+            if current_time - time_of_last_blink > blink_time:
+                blink_on = not blink_on
+                time_of_last_blink = current_time
+                blinks += 1
+            if blink_on:
+                for line in line_indexes:
+                    pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
+            pygame.display.update()
+
+        wait = get_ticks() + blink_time
+        while current_time < wait:
+            current_time = get_ticks()
+            self.clock.tick(self.settings.fps)
+            self.display_fps()
+            self.scoreboard.blitme()
+            self.next_shape.blitme()
             self.board.blitme()
             for line in line_indexes:
-                pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
-            self.scoreboard.blitme()
-            self.next_shape.blitme()
+                pygame.draw.rect(self.screen, self.settings.flesh_color, pygame.Rect(80, line * 40, 400, 40))
             pygame.display.update()
-            pygame.time.delay(150)
-
-            self.board.blitme()
-            self.scoreboard.blitme()
-            self.next_shape.blitme()
-            pygame.display.update()
-            pygame.time.delay(150)
-
-        self.clock.tick(self.settings.fps)
-        for line in line_indexes:
-            pygame.draw.rect(self.screen, self.settings.flesh_color, pygame.Rect(80, line * 40, 400, 40))
-        self.scoreboard.blitme()
-        self.next_shape.blitme()
-        pygame.display.update()
-        pygame.time.delay(150)
-
-        pygame.time.delay(150)
         self.sounds.board_land_after_clear.play()
 
 
     def draw_game_over(self):
         """Drawing the game over screen."""
         self.screen.blit(self.settings.game_over, (80,0))
-        if self.show_fps:
-            self.display_fps()
+        self.display_fps()
         pygame.display.update()
 
 
@@ -240,8 +253,7 @@ class Tetris():
         while self.pause:
             self.check_events()
             self.screen.blit(self.settings.pause, (80,0))
-            if self.show_fps:
-                self.display_fps()
+            self.display_fps()
             pygame.display.update()
 
 
@@ -307,6 +319,27 @@ class Tetris():
                 if event.key == pygame.K_f:
                     self.show_fps = not self.show_fps
                 self.title_screen = False
+
+    def check_events_select_music(self):
+        """Check for events on game type and music screen and respond to them."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.quit_game()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.quit_game()
+                if event.key == pygame.K_f:
+                    self.show_fps = not self.show_fps
+                if event.key == pygame.K_RIGHT:
+                    self.music_selection.right()
+                if event.key == pygame.K_LEFT:
+                    self.music_selection.left()
+                if event.key == pygame.K_DOWN:
+                    self.music_selection.down()
+                if event.key == pygame.K_UP:
+                    self.music_selection.up()
+                if event.key == pygame.K_RETURN:
+                    self.select_music_screen = False
 
 
     def check_events_game_over(self):
