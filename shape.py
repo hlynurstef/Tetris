@@ -107,15 +107,14 @@ class Shape():
     def drop_shape_down(self, board, game_stats):
         """Drops the shape to the highest point at current Y location."""
         while not board.has_landed(self.shape):
-            #if board.has_landed(self.shape):
-            #    if self.moving_fast:
-            #        game_stats.add_score((self.get_lowest_y_value() // 40) - self.moving_fast_start_index)
-            #    return True
             for row in self.shape:
                 for block in row:
                     block.rect.y += 40
             self.y += 40
-
+        if board.has_landed(self.shape):
+            if self.moving_fast:
+                game_stats.add_score(((self.get_lowest_y_value() // 40) - self.moving_fast_start_index)*2)
+            return True
 
     def move_shape_right(self, current_time):
         """Move shape to the left."""
