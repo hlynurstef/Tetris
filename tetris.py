@@ -294,12 +294,11 @@ class Tetris():
             if event.type == pygame.QUIT:
                 self.quit_game()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.title_screen = False
                 if event.key == pygame.K_ESCAPE:
                     self.quit_game()
                 if event.key == pygame.K_f:
                     self.show_fps = not self.show_fps
+                self.title_screen = False
 
 
     def check_events_game_over(self):
