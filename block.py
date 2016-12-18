@@ -3,11 +3,10 @@ from pygame.sprite import Sprite
 class Block(Sprite):
     """A class representing a single block."""
 
-    def __init__(self, screen, settings, image, x, y):
+    def __init__(self, screen, image, x, y):
         """Initialize the Block."""
         super(Block, self).__init__()
         self.screen = screen
-        self.settings = settings
 
         self.image = image
         self.rect = self.image.get_rect()
