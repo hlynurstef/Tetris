@@ -193,18 +193,21 @@ class Tetris():
         self.board.blitme()
         for line in line_indexes:
             pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
+        self.scoreboard.blitme()
         pygame.display.update()
         pygame.time.delay(150)
 
         for x in range(3):
             self.clock.tick(self.settings.fps)
             self.board.blitme()
+            self.scoreboard.blitme()
             pygame.display.update()
             pygame.time.delay(150)
 
             self.clock.tick(self.settings.fps)
             for line in line_indexes:
                 pygame.draw.rect(self.screen, self.settings.white, pygame.Rect(80, line * 40, 400, 40))
+            self.scoreboard.blitme()
             pygame.display.update()
             pygame.time.delay(150)
 
