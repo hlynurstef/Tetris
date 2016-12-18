@@ -11,7 +11,7 @@ from block import Block
 from shape import Shape
 from board import Board
 from text import Text
-from db_conn import DB_conn
+from db_conn import DBConnection
 
 class Tetris():
     """A class representing the game."""
@@ -53,7 +53,7 @@ class Tetris():
         self.channel = pygame.mixer.Channel(1)
 
         # Database connection.
-        self.db = DB_conn()
+        self.db = DBConnection()
 
 
     def run_game(self):

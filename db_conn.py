@@ -1,7 +1,7 @@
 import sqlite3
 
 
-class DB_conn():
+class DBConnection():
     """A class that talks to the database, currently SQLite3"""
 
     def __init__(self):
