@@ -140,7 +140,8 @@ class Tetris():
 
     def run_game_over(self):
         """Run game over sreen."""
-        self.sounds.game_over.play()
+        self.music_channel.stop()
+        self.music_channel.play(self.sounds.game_over)
         while self.game_over:
             self.clock.tick(self.settings.fps)
             self.check_events_game_over()
@@ -168,6 +169,7 @@ class Tetris():
                 self.screen.blit(image, rect)
             self.display_fps()
             pygame.display.update()
+        self.high_score_screen = True
 
 
     def update_screen(self):
